@@ -1,4 +1,7 @@
 import "./global.css";
+import Providers from "./providers";
+import { ToastProvider } from "@/components/ui/toast-provider";
+import NextTopLoader from "nextjs-toploader";
 
 export const metadata = {
   title: "Welcome to frontend",
@@ -12,7 +15,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <NextTopLoader color="#4f46e5" showSpinner={false} />
+        <Providers>
+          <ToastProvider>{children}</ToastProvider>
+        </Providers>
+      </body>
     </html>
   );
 }

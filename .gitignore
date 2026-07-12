@@ -34,6 +34,7 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
+tsconfig.tsbuildinfo
 
 # System Files
 .DS_Store
@@ -55,3 +56,8 @@ Thumbs.db
 out
 
 test-output
+
+# Environment Variables
+.env
+.env.*
+!.env.example

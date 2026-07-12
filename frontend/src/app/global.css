@@ -1,1 +1,32 @@
 @import "tailwindcss";
+@plugin "tailwindcss-animate";
+
+@theme {
+  /* Base Colors */
+  --color-background: #ffffff;
+  --color-foreground: #020817;
+  --color-border: #e2e8f0;
+
+  /* Modern Indigo Primary */
+  --color-primary: #4f46e5;
+  --color-primaryH: #4338ca;
+  --color-primaryA: #3730a3;
+
+  /* Slate Secondary */
+  --color-secondary: #0f172a;
+  --color-secondaryH: #1e293b;
+  --color-secondaryA: #334155;
+
+  /* Red Destructive */
+  --color-destructive: #ef4444;
+  --color-destructiveH: #dc2626;
+  --color-destructiveA: #b91c1c;
+
+  /* Muted & Accents */
+  --color-muted: #f1f5f9;
+  --color-muted-foreground: #64748b;
+
+  /* Success & Warning */
+  --color-success: #16a34a;
+  --color-warning: #f59e0b;
+}
