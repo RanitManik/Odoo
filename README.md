@@ -19,6 +19,7 @@ This project was built during an 8-hour hackathon.
 ## Quick Start
 
 1. Install dependencies:
+
    ```bash
    npm install
    ```
