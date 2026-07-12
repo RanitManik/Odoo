@@ -69,7 +69,9 @@ export const exportCSV = async (req: Request, res: Response) => {
     a.user ? `"${a.user.name.replace(/"/g, '""')}"` : '""',
     a.acquisitionCost ? a.acquisitionCost.toString() : "0",
     a.acquisitionDate ? a.acquisitionDate.toISOString().split("T")[0] : "",
-    a.expectedReturnDate ? a.expectedReturnDate.toISOString().split("T")[0] : "",
+    a.expectedReturnDate
+      ? a.expectedReturnDate.toISOString().split("T")[0]
+      : "",
     a.createdAt.toISOString().split("T")[0],
   ]);
 
@@ -79,6 +81,9 @@ export const exportCSV = async (req: Request, res: Response) => {
   ].join("\n");
 
   res.setHeader("Content-Type", "text/csv");
-  res.setHeader("Content-Disposition", "attachment; filename=assets-report.csv");
+  res.setHeader(
+    "Content-Disposition",
+    "attachment; filename=assets-report.csv",
+  );
   return res.send(csvContent);
 };

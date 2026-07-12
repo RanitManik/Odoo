@@ -50,7 +50,9 @@ export default function DashboardPage() {
     },
   });
 
-  const { data: transfers = [], isLoading: transfersLoading } = useQuery<TransferRequest[]>({
+  const { data: transfers = [], isLoading: transfersLoading } = useQuery<
+    TransferRequest[]
+  >({
     queryKey: ["transfers"],
     queryFn: async () => {
       const res = await api.get("/transfers");
@@ -66,13 +68,14 @@ export default function DashboardPage() {
     },
   });
 
-  const { data: maintenanceRequests = [], isLoading: maintenanceLoading } = useQuery<any[]>({
-    queryKey: ["maintenance-requests"],
-    queryFn: async () => {
-      const res = await api.get("/maintenance");
-      return res.data;
-    },
-  });
+  const { data: maintenanceRequests = [], isLoading: maintenanceLoading } =
+    useQuery<any[]>({
+      queryKey: ["maintenance-requests"],
+      queryFn: async () => {
+        const res = await api.get("/maintenance");
+        return res.data;
+      },
+    });
 
   const { data: audits = [], isLoading: auditsLoading } = useQuery<any[]>({
     queryKey: ["audits"],
@@ -126,10 +129,18 @@ export default function DashboardPage() {
   // Calculate live statistics
   const availableCount = assets.filter((a) => a.status === "AVAILABLE").length;
   const allocatedCount = assets.filter((a) => a.status === "ALLOCATED").length;
-  const pendingTransfersCount = transfers.filter((t) => t.status === "PENDING").length;
-  const activeBookingsCount = bookings.filter((b) => b.status === "UPCOMING" || b.status === "ONGOING").length;
-  const activeMaintenanceCount = maintenanceRequests.filter((r) => r.status !== "RESOLVED" && r.status !== "REJECTED").length;
-  const activeAuditsCount = audits.filter((a) => a.status === "SCHEDULED" || a.status === "IN_PROGRESS").length;
+  const pendingTransfersCount = transfers.filter(
+    (t) => t.status === "PENDING",
+  ).length;
+  const activeBookingsCount = bookings.filter(
+    (b) => b.status === "UPCOMING" || b.status === "ONGOING",
+  ).length;
+  const activeMaintenanceCount = maintenanceRequests.filter(
+    (r) => r.status !== "RESOLVED" && r.status !== "REJECTED",
+  ).length;
+  const activeAuditsCount = audits.filter(
+    (a) => a.status === "SCHEDULED" || a.status === "IN_PROGRESS",
+  ).length;
 
   const overdueAssets = assets.filter((a) => {
     if (a.status !== "ALLOCATED" || !a.expectedReturnDate) return false;
@@ -154,7 +165,9 @@ export default function DashboardPage() {
             <Box className="h-4 w-4" />
             <span>Available Assets</span>
           </div>
-          <div className="text-foreground mt-4 text-4xl font-bold">{availableCount}</div>
+          <div className="text-foreground mt-4 text-4xl font-bold">
+            {availableCount}
+          </div>
         </div>
 
         <div className="border-border bg-background rounded-xl border p-6 shadow-sm transition-all hover:shadow-md">
@@ -162,7 +175,9 @@ export default function DashboardPage() {
             <CheckCircle2 className="h-4 w-4" />
             <span>Allocated Assets</span>
           </div>
-          <div className="text-foreground mt-4 text-4xl font-bold">{allocatedCount}</div>
+          <div className="text-foreground mt-4 text-4xl font-bold">
+            {allocatedCount}
+          </div>
         </div>
 
         <div className="border-border bg-background rounded-xl border p-6 shadow-sm transition-all hover:shadow-md">
@@ -170,7 +185,9 @@ export default function DashboardPage() {
             <Wrench className="h-4 w-4" />
             <span>Maintenance</span>
           </div>
-          <div className="text-foreground mt-4 text-4xl font-bold">{activeMaintenanceCount}</div>
+          <div className="text-foreground mt-4 text-4xl font-bold">
+            {activeMaintenanceCount}
+          </div>
         </div>
 
         <div className="border-border bg-background rounded-xl border p-6 shadow-sm transition-all hover:shadow-md">
@@ -178,7 +195,9 @@ export default function DashboardPage() {
             <CalendarClock className="h-4 w-4" />
             <span>Active Bookings</span>
           </div>
-          <div className="text-foreground mt-4 text-4xl font-bold">{activeBookingsCount}</div>
+          <div className="text-foreground mt-4 text-4xl font-bold">
+            {activeBookingsCount}
+          </div>
         </div>
 
         <div className="border-border bg-background rounded-xl border p-6 shadow-sm transition-all hover:shadow-md">
@@ -186,7 +205,9 @@ export default function DashboardPage() {
             <ClipboardList className="h-4 w-4" />
             <span>Active Audits</span>
           </div>
-          <div className="text-foreground mt-4 text-4xl font-bold">{activeAuditsCount}</div>
+          <div className="text-foreground mt-4 text-4xl font-bold">
+            {activeAuditsCount}
+          </div>
         </div>
 
         <div className="border-border bg-background rounded-xl border p-6 shadow-sm transition-all hover:shadow-md">
@@ -194,7 +215,9 @@ export default function DashboardPage() {
             <ArrowRightLeft className="h-4 w-4" />
             <span>Pending Transfers</span>
           </div>
-          <div className="text-foreground mt-4 text-4xl font-bold">{pendingTransfersCount}</div>
+          <div className="text-foreground mt-4 text-4xl font-bold">
+            {pendingTransfersCount}
+          </div>
         </div>
       </div>
 
@@ -203,9 +226,12 @@ export default function DashboardPage() {
         <div className="border-destructive/50 bg-destructive/10 text-destructive flex items-center gap-4 rounded-xl border p-5">
           <AlertCircle className="h-6 w-6 shrink-0" />
           <div>
-            <h4 className="text-sm font-bold">{overdueAssets.length} assets overdue for return</h4>
+            <h4 className="text-sm font-bold">
+              {overdueAssets.length} assets overdue for return
+            </h4>
             <p className="text-sm opacity-90">
-              These assets have passed their expected return date. Please follow up.
+              These assets have passed their expected return date. Please follow
+              up.
             </p>
           </div>
           <Link href="/allocation" className="ml-auto">
@@ -245,14 +271,23 @@ export default function DashboardPage() {
         <div className="p-0">
           <ul className="divide-border divide-y">
             {assets.slice(0, 3).map((asset) => {
-              const holderName = asset.user?.name || asset.department?.name || "";
+              const holderName =
+                asset.user?.name || asset.department?.name || "";
               return (
-                <li key={asset.id} className="hover:bg-muted/50 flex items-start gap-4 p-6">
-                  <div className={`mt-1 h-2 w-2 rounded-full ${asset.status === "ALLOCATED" ? "bg-primary" : "bg-success"}`}></div>
+                <li
+                  key={asset.id}
+                  className="hover:bg-muted/50 flex items-start gap-4 p-6"
+                >
+                  <div
+                    className={`mt-1 h-2 w-2 rounded-full ${asset.status === "ALLOCATED" ? "bg-primary" : "bg-success"}`}
+                  ></div>
                   <div>
                     <p className="text-foreground text-sm font-medium">
-                      Asset {asset.name} ({asset.assetTag}) - currently {asset.status.toLowerCase()}
-                      {asset.status === "ALLOCATED" && holderName && ` to ${holderName}`}
+                      Asset {asset.name} ({asset.assetTag}) - currently{" "}
+                      {asset.status.toLowerCase()}
+                      {asset.status === "ALLOCATED" &&
+                        holderName &&
+                        ` to ${holderName}`}
                     </p>
                     <div className="text-muted-foreground mt-1 flex items-center text-xs">
                       <Clock className="mr-1 h-3 w-3" />

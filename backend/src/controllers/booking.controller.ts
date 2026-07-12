@@ -60,7 +60,9 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
   }
 
   if (!asset.isBookable) {
-    return res.status(400).json({ error: "Asset is not registered as a bookable resource" });
+    return res
+      .status(400)
+      .json({ error: "Asset is not registered as a bookable resource" });
   }
 
   if (data.startTime >= data.endTime) {
@@ -88,10 +90,14 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
   if (overlapping) {
     return res.status(400).json({
       error: `Time-slot overlaps with an existing booking by ${overlapping.user.name} (${new Date(
-        overlapping.startTime
-      ).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} - ${new Date(
-        overlapping.endTime
-      ).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })})`,
+        overlapping.startTime,
+      ).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })} - ${new Date(overlapping.endTime).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })})`,
     });
   }
 

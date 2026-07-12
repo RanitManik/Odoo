@@ -124,7 +124,8 @@ export const approveRequest = async (req: AuthRequest, res: Response) => {
     data: {
       assetId: request.assetId,
       action: "MAINTENANCE_APPROVED",
-      details: "Maintenance request approved. Asset status set to Under Maintenance.",
+      details:
+        "Maintenance request approved. Asset status set to Under Maintenance.",
       userId: currentUserId,
     },
   });
@@ -270,7 +271,8 @@ export const resolveRequest = async (req: AuthRequest, res: Response) => {
     data: {
       assetId: request.assetId,
       action: "MAINTENANCE_RESOLVED",
-      details: "Maintenance work completed and resolved. Asset status set to Available.",
+      details:
+        "Maintenance work completed and resolved. Asset status set to Available.",
       userId: currentUserId,
     },
   });

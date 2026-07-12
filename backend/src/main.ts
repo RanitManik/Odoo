@@ -24,20 +24,23 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://odoo-frontend-bice.vercel.app"
+  "https://odoo-frontend-bice.vercel.app",
 ];
 
 app.use(
   cors({
     origin: (origin, callback) => {
       if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith(".vercel.app")) {
+      if (
+        allowedOrigins.indexOf(origin) !== -1 ||
+        origin.endsWith(".vercel.app")
+      ) {
         return callback(null, true);
       }
       return callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
-  })
+  }),
 );
 app.use(express.json());
 app.use(cookieParser());

@@ -50,7 +50,9 @@ interface Audit {
 
 export default function AuditPage() {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState<"active" | "history" | "discrepancies">("active");
+  const [activeTab, setActiveTab] = useState<
+    "active" | "history" | "discrepancies"
+  >("active");
 
   // Modals state
   const [isScheduleOpen, setScheduleOpen] = useState(false);
@@ -125,7 +127,11 @@ export default function AuditPage() {
       toast.success("Audit scheduled successfully");
       queryClient.invalidateQueries({ queryKey: ["audits"] });
       setScheduleOpen(false);
-      setScheduleForm({ assetId: "", auditorId: "", dueDate: new Date().toISOString().split("T")[0] });
+      setScheduleForm({
+        assetId: "",
+        auditorId: "",
+        dueDate: new Date().toISOString().split("T")[0],
+      });
     },
     onError: (err) => toast.error(extractError(err)),
   });
@@ -144,7 +150,10 @@ export default function AuditPage() {
 
   const completeAuditMutation = useMutation({
     mutationFn: async (payload: { id: string; data: typeof verifyForm }) => {
-      const res = await api.post(`/audits/${payload.id}/complete`, payload.data);
+      const res = await api.post(
+        `/audits/${payload.id}/complete`,
+        payload.data,
+      );
       return res.data;
     },
     onSuccess: () => {
@@ -153,7 +162,12 @@ export default function AuditPage() {
       queryClient.invalidateQueries({ queryKey: ["assets"] });
       setVerifyOpen(false);
       setSelectedAudit(null);
-      setVerifyForm({ verifiedCondition: "GOOD", locationVerified: true, isDiscrepancy: false, notes: "" });
+      setVerifyForm({
+        verifiedCondition: "GOOD",
+        locationVerified: true,
+        isDiscrepancy: false,
+        notes: "",
+      });
     },
     onError: (err) => toast.error(extractError(err)),
   });
@@ -194,7 +208,9 @@ export default function AuditPage() {
   ];
 
   // Lists filter
-  const activeAudits = audits.filter((a) => a.status === "SCHEDULED" || a.status === "IN_PROGRESS");
+  const activeAudits = audits.filter(
+    (a) => a.status === "SCHEDULED" || a.status === "IN_PROGRESS",
+  );
   const discrepancyAudits = audits.filter((a) => a.status === "DISCREPANCY");
   const historyAudits = audits.filter((a) => a.status === "COMPLETED");
 
@@ -212,7 +228,9 @@ export default function AuditPage() {
       formatValue: (_: any, row: Audit) => (
         <div>
           <div className="font-semibold text-gray-800">{row.asset.name}</div>
-          <div className="font-mono text-xs text-gray-400">{row.asset.assetTag}</div>
+          <div className="font-mono text-xs text-gray-400">
+            {row.asset.assetTag}
+          </div>
         </div>
       ),
     },
@@ -221,7 +239,9 @@ export default function AuditPage() {
       label: "Auditor",
       formatValue: (_: any, row: Audit) => (
         <div>
-          <div className="text-sm font-medium text-gray-700">{row.auditor.name}</div>
+          <div className="text-sm font-medium text-gray-700">
+            {row.auditor.name}
+          </div>
           <div className="text-xs text-gray-400">{row.auditor.email}</div>
         </div>
       ),
@@ -246,7 +266,9 @@ export default function AuditPage() {
           DISCREPANCY: "bg-red-100 text-red-800",
         }[row.status];
         return (
-          <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${styles}`}>
+          <span
+            className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${styles}`}
+          >
             {statusLabels[row.status]}
           </span>
         );
@@ -257,15 +279,31 @@ export default function AuditPage() {
       label: "Audit Details",
       formatValue: (_: any, row: Audit) => {
         if (row.status === "SCHEDULED" || row.status === "IN_PROGRESS") {
-          return <span className="text-gray-400 text-xs">Awaiting audit verification</span>;
+          return (
+            <span className="text-xs text-gray-400">
+              Awaiting audit verification
+            </span>
+          );
         }
         return (
-          <div className="text-xs text-gray-500 space-y-1">
-            <div>Condition: <span className="font-medium text-gray-700">{row.verifiedCondition}</span></div>
-            <div>Location verified: <span className="font-medium text-gray-700">{row.locationVerified ? "Yes" : "No"}</span></div>
+          <div className="space-y-1 text-xs text-gray-500">
+            <div>
+              Condition:{" "}
+              <span className="font-medium text-gray-700">
+                {row.verifiedCondition}
+              </span>
+            </div>
+            <div>
+              Location verified:{" "}
+              <span className="font-medium text-gray-700">
+                {row.locationVerified ? "Yes" : "No"}
+              </span>
+            </div>
             {row.notes && <div>Notes: {row.notes}</div>}
             {row.resolutionNotes && (
-              <div className="text-green-600 font-medium">Resolution: {row.resolutionNotes}</div>
+              <div className="font-medium text-green-600">
+                Resolution: {row.resolutionNotes}
+              </div>
             )}
           </div>
         );
@@ -314,7 +352,7 @@ export default function AuditPage() {
             </Button>
           );
         }
-        return <span className="text-gray-400 text-xs">—</span>;
+        return <span className="text-xs text-gray-400">—</span>;
       },
     },
   ];
@@ -327,7 +365,8 @@ export default function AuditPage() {
             Asset Audits
           </h2>
           <p className="text-muted-foreground mt-2">
-            Schedule physical asset audits, assign auditors, flag discrepancies, and document resolutions.
+            Schedule physical asset audits, assign auditors, flag discrepancies,
+            and document resolutions.
           </p>
         </div>
         <Button onClick={() => setScheduleOpen(true)}>
@@ -362,7 +401,7 @@ export default function AuditPage() {
         >
           <ShieldAlert className="h-4 w-4 text-red-500" />
           Discrepancies Flagged
-          <span className="bg-red-100 ml-1 rounded-full px-2 py-0.5 text-xs font-semibold text-red-600">
+          <span className="ml-1 rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-600">
             {discrepancyAudits.length}
           </span>
         </button>
@@ -389,12 +428,14 @@ export default function AuditPage() {
         </div>
       ) : activeTab === "active" ? (
         activeAudits.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-center bg-white border border-gray-200">
+          <div className="flex flex-col items-center justify-center border border-gray-200 bg-white py-16 text-center">
             <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
               <ClipboardList className="h-7 w-7 text-gray-400" />
             </div>
-            <p className="mb-1 text-sm font-medium text-gray-900">No active audits scheduled</p>
-            <p className="text-sm text-gray-500 mb-5">
+            <p className="mb-1 text-sm font-medium text-gray-900">
+              No active audits scheduled
+            </p>
+            <p className="mb-5 text-sm text-gray-500">
               Scheduled or In Progress audits will be tracking details here.
             </p>
             <Button size="sm" onClick={() => setScheduleOpen(true)}>
@@ -413,13 +454,16 @@ export default function AuditPage() {
         )
       ) : activeTab === "discrepancies" ? (
         discrepancyAudits.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-center bg-white rounded-xl border border-gray-200">
+          <div className="flex flex-col items-center justify-center rounded-xl border border-gray-200 bg-white py-16 text-center">
             <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
               <ShieldAlert className="h-7 w-7 text-gray-400" />
             </div>
-            <p className="mb-1 text-sm font-medium text-gray-900">No flagged discrepancies found</p>
+            <p className="mb-1 text-sm font-medium text-gray-900">
+              No flagged discrepancies found
+            </p>
             <p className="text-sm text-gray-500">
-              All physical location or condition mismatches requiring resolution will appear here.
+              All physical location or condition mismatches requiring resolution
+              will appear here.
             </p>
           </div>
         ) : (
@@ -433,13 +477,16 @@ export default function AuditPage() {
           />
         )
       ) : historyAudits.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-center bg-white rounded-xl border border-gray-200">
+        <div className="flex flex-col items-center justify-center rounded-xl border border-gray-200 bg-white py-16 text-center">
           <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
             <Clock className="h-7 w-7 text-gray-400" />
           </div>
-          <p className="mb-1 text-sm font-medium text-gray-900">No completed audit history found</p>
+          <p className="mb-1 text-sm font-medium text-gray-900">
+            No completed audit history found
+          </p>
           <p className="text-sm text-gray-500">
-            Successfully completed check logs and discrepancy resolutions are cataloged here.
+            Successfully completed check logs and discrepancy resolutions are
+            cataloged here.
           </p>
         </div>
       ) : (
@@ -454,7 +501,11 @@ export default function AuditPage() {
       )}
 
       {/* --- SCHEDULE AUDIT MODAL --- */}
-      <Modal isOpen={isScheduleOpen} onClose={() => setScheduleOpen(false)} width="sm">
+      <Modal
+        isOpen={isScheduleOpen}
+        onClose={() => setScheduleOpen(false)}
+        width="sm"
+      >
         <ModalHeader>
           <ModalTitle title="Schedule Physical Asset Audit" />
         </ModalHeader>
@@ -469,38 +520,56 @@ export default function AuditPage() {
               label="Select Asset"
               options={assetOptions}
               selectedOption={
-                assetOptions.find((o) => o.value === scheduleForm.assetId) ?? (null as any)
+                assetOptions.find((o) => o.value === scheduleForm.assetId) ??
+                (null as any)
               }
-              onChange={(val: any) => setScheduleForm({ ...scheduleForm, assetId: val?.value || "" })}
+              onChange={(val: any) =>
+                setScheduleForm({ ...scheduleForm, assetId: val?.value || "" })
+              }
               required
             />
             <Select
               label="Assign Auditor"
               options={auditorOptions}
               selectedOption={
-                auditorOptions.find((o) => o.value === scheduleForm.auditorId) ?? (null as any)
+                auditorOptions.find(
+                  (o) => o.value === scheduleForm.auditorId,
+                ) ?? (null as any)
               }
-              onChange={(val: any) => setScheduleForm({ ...scheduleForm, auditorId: val?.value || "" })}
+              onChange={(val: any) =>
+                setScheduleForm({
+                  ...scheduleForm,
+                  auditorId: val?.value || "",
+                })
+              }
               required
             />
             <Input
               label="Audit Schedule Date"
               type="date"
               value={scheduleForm.dueDate}
-              onChange={(e) => setScheduleForm({ ...scheduleForm, dueDate: e.target.value })}
+              onChange={(e) =>
+                setScheduleForm({ ...scheduleForm, dueDate: e.target.value })
+              }
               required
             />
           </ModalBody>
           <ModalFooter>
             <Button type="submit" disabled={scheduleAuditMutation.isPending}>
-              {scheduleAuditMutation.isPending ? "Scheduling..." : "Confirm Schedule"}
+              {scheduleAuditMutation.isPending
+                ? "Scheduling..."
+                : "Confirm Schedule"}
             </Button>
           </ModalFooter>
         </form>
       </Modal>
 
       {/* --- VERIFY AUDIT MODAL --- */}
-      <Modal isOpen={isVerifyOpen} onClose={() => setVerifyOpen(false)} width="sm">
+      <Modal
+        isOpen={isVerifyOpen}
+        onClose={() => setVerifyOpen(false)}
+        width="sm"
+      >
         <ModalHeader>
           <ModalTitle title="Verify Physical Asset Details" />
         </ModalHeader>
@@ -520,45 +589,62 @@ export default function AuditPage() {
               label="Physical Condition"
               options={conditionOptions}
               selectedOption={
-                conditionOptions.find((o) => o.value === verifyForm.verifiedCondition) ?? conditionOptions[1]
+                conditionOptions.find(
+                  (o) => o.value === verifyForm.verifiedCondition,
+                ) ?? conditionOptions[1]
               }
               onChange={(val: any) =>
-                setVerifyForm({ ...verifyForm, verifiedCondition: val?.value || "GOOD" })
+                setVerifyForm({
+                  ...verifyForm,
+                  verifiedCondition: val?.value || "GOOD",
+                })
               }
               required
             />
-            <div className="flex flex-col gap-2 border-b border-gray-150 pb-2">
+            <div className="border-gray-150 flex flex-col gap-2 border-b pb-2">
               <CheckBox
                 id="locationVerified"
                 label="Physical location verified matches system registry"
                 checked={verifyForm.locationVerified}
-                onCheck={(checked) => setVerifyForm({ ...verifyForm, locationVerified: checked })}
+                onCheck={(checked) =>
+                  setVerifyForm({ ...verifyForm, locationVerified: checked })
+                }
               />
               <CheckBox
                 id="isDiscrepancy"
                 label="Flag Discrepancy (requires investigation)"
                 checked={verifyForm.isDiscrepancy}
-                onCheck={(checked) => setVerifyForm({ ...verifyForm, isDiscrepancy: checked })}
+                onCheck={(checked) =>
+                  setVerifyForm({ ...verifyForm, isDiscrepancy: checked })
+                }
               />
             </div>
             <Textarea
               label="Notes"
               placeholder="E.g., Mismatch in serial tag, minor physical wear..."
               value={verifyForm.notes}
-              onChange={(e) => setVerifyForm({ ...verifyForm, notes: e.target.value })}
+              onChange={(e) =>
+                setVerifyForm({ ...verifyForm, notes: e.target.value })
+              }
               rows={3}
             />
           </ModalBody>
           <ModalFooter>
             <Button type="submit" disabled={completeAuditMutation.isPending}>
-              {completeAuditMutation.isPending ? "Submitting..." : "Submit Verification"}
+              {completeAuditMutation.isPending
+                ? "Submitting..."
+                : "Submit Verification"}
             </Button>
           </ModalFooter>
         </form>
       </Modal>
 
       {/* --- RESOLVE DISCREPANCY MODAL --- */}
-      <Modal isOpen={isResolveOpen} onClose={() => setResolveOpen(false)} width="sm">
+      <Modal
+        isOpen={isResolveOpen}
+        onClose={() => setResolveOpen(false)}
+        width="sm"
+      >
         <ModalHeader>
           <ModalTitle title="Resolve Flagged Discrepancy" />
         </ModalHeader>
@@ -578,14 +664,21 @@ export default function AuditPage() {
               label="Resolution Notes"
               placeholder="Explain how discrepancy was resolved..."
               value={resolveForm.resolutionNotes}
-              onChange={(e) => setResolveForm({ resolutionNotes: e.target.value })}
+              onChange={(e) =>
+                setResolveForm({ resolutionNotes: e.target.value })
+              }
               required
               rows={4}
             />
           </ModalBody>
           <ModalFooter>
-            <Button type="submit" disabled={resolveDiscrepancyMutation.isPending}>
-              {resolveDiscrepancyMutation.isPending ? "Resolving..." : "Clear Discrepancy"}
+            <Button
+              type="submit"
+              disabled={resolveDiscrepancyMutation.isPending}
+            >
+              {resolveDiscrepancyMutation.isPending
+                ? "Resolving..."
+                : "Clear Discrepancy"}
             </Button>
           </ModalFooter>
         </form>

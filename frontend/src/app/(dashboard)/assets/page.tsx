@@ -428,7 +428,9 @@ export default function AssetsPage() {
   const [categoryFilter, setCategoryFilter] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
   const [editingAsset, setEditingAsset] = useState<Asset | null>(null);
-  const [deleteTargetAsset, setDeleteTargetAsset] = useState<Asset | null>(null);
+  const [deleteTargetAsset, setDeleteTargetAsset] = useState<Asset | null>(
+    null,
+  );
 
   const { data: assets = [], isLoading } = useQuery<Asset[]>({
     queryKey: ["assets"],

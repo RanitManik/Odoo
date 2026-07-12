@@ -211,7 +211,7 @@ export default function ReportsPage() {
       </div>
 
       {/* Advanced Filters Panel */}
-      <div className="grid gap-4 bg-white p-5 shadow-sm rounded-xl border border-gray-200 md:grid-cols-5">
+      <div className="grid gap-4 md:grid-cols-5">
         <Select
           label="Status"
           options={statusOptions}

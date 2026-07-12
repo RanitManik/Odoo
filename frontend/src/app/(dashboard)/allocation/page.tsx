@@ -23,7 +23,14 @@ interface Asset {
   id: string;
   name: string;
   assetTag: string;
-  status: "AVAILABLE" | "ALLOCATED" | "RESERVED" | "UNDER_MAINTENANCE" | "LOST" | "RETIRED" | "DISPOSED";
+  status:
+    | "AVAILABLE"
+    | "ALLOCATED"
+    | "RESERVED"
+    | "UNDER_MAINTENANCE"
+    | "LOST"
+    | "RETIRED"
+    | "DISPOSED";
   condition: string;
   expectedReturnDate: string | null;
   user: { id: string; name: string; email: string } | null;
@@ -54,7 +61,9 @@ interface TransferRequest {
 
 export default function AllocationPage() {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState<"allocations" | "transfers">("allocations");
+  const [activeTab, setActiveTab] = useState<"allocations" | "transfers">(
+    "allocations",
+  );
 
   // Modals state
   const [isAllocateOpen, setAllocateOpen] = useState(false);
@@ -122,7 +131,9 @@ export default function AllocationPage() {
     },
   });
 
-  const { data: transfers = [], isLoading: transfersLoading } = useQuery<TransferRequest[]>({
+  const { data: transfers = [], isLoading: transfersLoading } = useQuery<
+    TransferRequest[]
+  >({
     queryKey: ["transfers"],
     queryFn: async () => {
       const res = await api.get("/transfers");
@@ -158,7 +169,11 @@ export default function AllocationPage() {
   });
 
   const returnMutation = useMutation({
-    mutationFn: async (payload: { assetId: string; condition: string; notes?: string }) => {
+    mutationFn: async (payload: {
+      assetId: string;
+      condition: string;
+      notes?: string;
+    }) => {
       const res = await api.post(`/assets/${payload.assetId}/return`, {
         condition: payload.condition,
         notes: payload.notes,
@@ -180,10 +195,13 @@ export default function AllocationPage() {
       targetUserId?: string | null;
       targetDeptId?: string | null;
     }) => {
-      const res = await api.post(`/assets/${payload.assetId}/transfer-request`, {
-        targetUserId: payload.targetUserId,
-        targetDeptId: payload.targetDeptId,
-      });
+      const res = await api.post(
+        `/assets/${payload.assetId}/transfer-request`,
+        {
+          targetUserId: payload.targetUserId,
+          targetDeptId: payload.targetDeptId,
+        },
+      );
       return res.data;
     },
     onSuccess: () => {
@@ -238,8 +256,11 @@ export default function AllocationPage() {
     // Conflict Check Rule: If already allocated, block & prompt Transfer
     if (asset && asset.status === "ALLOCATED") {
       setSelectedAsset(asset);
-      const currentlyHeldBy = asset.user?.name || asset.department?.name || "another user/department";
-      toast.error(`Asset is currently held by ${currentlyHeldBy}. Initiate a transfer request instead.`);
+      const currentlyHeldBy =
+        asset.user?.name || asset.department?.name || "another user/department";
+      toast.error(
+        `Asset is currently held by ${currentlyHeldBy}. Initiate a transfer request instead.`,
+      );
       setAllocateOpen(false);
       setTransferOpen(true);
       setTransferForm({
@@ -252,8 +273,12 @@ export default function AllocationPage() {
 
     allocateMutation.mutate({
       assetId: allocateForm.assetId,
-      userId: allocateForm.targetType === "employee" ? allocateForm.userId : null,
-      departmentId: allocateForm.targetType === "department" ? allocateForm.departmentId : null,
+      userId:
+        allocateForm.targetType === "employee" ? allocateForm.userId : null,
+      departmentId:
+        allocateForm.targetType === "department"
+          ? allocateForm.departmentId
+          : null,
       expectedReturnDate: allocateForm.expectedReturnDate || null,
     });
   };
@@ -290,7 +315,9 @@ export default function AllocationPage() {
       key: "assetTag",
       label: "Asset Tag",
       formatValue: (_: any, row: Asset) => (
-        <span className="font-mono font-semibold text-gray-700">{row.assetTag}</span>
+        <span className="font-mono font-semibold text-gray-700">
+          {row.assetTag}
+        </span>
       ),
     },
     { key: "name", label: "Asset Name" },
@@ -321,13 +348,14 @@ export default function AllocationPage() {
       key: "expectedReturnDate",
       label: "Due Date",
       formatValue: (_: any, row: Asset) => {
-        if (!row.expectedReturnDate) return <span className="text-gray-400">No Limit</span>;
+        if (!row.expectedReturnDate)
+          return <span className="text-gray-400">No Limit</span>;
         const date = new Date(row.expectedReturnDate);
         const isOverdue = date < new Date();
         return (
           <span
             className={`inline-flex items-center gap-1 font-medium ${
-              isOverdue ? "text-red-600 font-bold" : "text-gray-600"
+              isOverdue ? "font-bold text-red-600" : "text-gray-600"
             }`}
           >
             <Calendar className="h-3.5 w-3.5" />
@@ -378,8 +406,10 @@ export default function AllocationPage() {
       label: "Asset",
       formatValue: (_: any, row: TransferRequest) => (
         <div>
-          <div className="font-semibold text-gray-850">{row.asset.name}</div>
-          <div className="font-mono text-xs text-gray-450">{row.asset.assetTag}</div>
+          <div className="text-gray-850 font-semibold">{row.asset.name}</div>
+          <div className="text-gray-450 font-mono text-xs">
+            {row.asset.assetTag}
+          </div>
         </div>
       ),
     },
@@ -423,7 +453,9 @@ export default function AllocationPage() {
           REJECTED: "bg-red-100 text-red-800",
         }[row.status];
         return (
-          <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${styles}`}>
+          <span
+            className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${styles}`}
+          >
             {row.status}
           </span>
         );
@@ -434,7 +466,7 @@ export default function AllocationPage() {
       label: "Actions",
       formatValue: (_: any, row: TransferRequest) => {
         if (row.status !== "PENDING") {
-          return <span className="text-gray-400 text-xs">—</span>;
+          return <span className="text-xs text-gray-400">—</span>;
         }
         return (
           <div className="flex gap-2">
@@ -482,7 +514,8 @@ export default function AllocationPage() {
             Asset Allocation & Transfer
           </h2>
           <p className="text-muted-foreground mt-2">
-            Manage allocations, expected return policies, and department/employee transfers.
+            Manage allocations, expected return policies, and
+            department/employee transfers.
           </p>
         </div>
         <Button onClick={() => setAllocateOpen(true)}>
@@ -534,7 +567,9 @@ export default function AllocationPage() {
             <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
               <Building2 className="h-7 w-7 text-gray-400" />
             </div>
-            <p className="mb-1 text-sm font-medium text-gray-900">No active allocations</p>
+            <p className="mb-1 text-sm font-medium text-gray-900">
+              No active allocations
+            </p>
             <p className="mb-5 text-sm text-gray-500">
               Allocate assets to departments or employees to start tracking.
             </p>
@@ -561,9 +596,12 @@ export default function AllocationPage() {
           <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
             <ArrowRightLeft className="h-7 w-7 text-gray-400" />
           </div>
-          <p className="mb-1 text-sm font-medium text-gray-900">No transfer requests</p>
+          <p className="mb-1 text-sm font-medium text-gray-900">
+            No transfer requests
+          </p>
           <p className="text-sm text-gray-500">
-            All requests to transfer allocated assets between employees will appear here.
+            All requests to transfer allocated assets between employees will
+            appear here.
           </p>
         </div>
       ) : (
@@ -578,7 +616,11 @@ export default function AllocationPage() {
       )}
 
       {/* --- ALLOCATE MODAL --- */}
-      <Modal isOpen={isAllocateOpen} onClose={() => setAllocateOpen(false)} width="sm">
+      <Modal
+        isOpen={isAllocateOpen}
+        onClose={() => setAllocateOpen(false)}
+        width="sm"
+      >
         <ModalHeader>
           <ModalTitle title="Allocate Asset" />
         </ModalHeader>
@@ -588,7 +630,9 @@ export default function AllocationPage() {
               label="Select Asset"
               options={availableAssetOptions}
               selectedOption={
-                availableAssetOptions.find((o) => o.value === allocateForm.assetId) ?? (null as any)
+                availableAssetOptions.find(
+                  (o) => o.value === allocateForm.assetId,
+                ) ?? (null as any)
               }
               onChange={(val: any) =>
                 setAllocateForm({ ...allocateForm, assetId: val?.value || "" })
@@ -606,7 +650,12 @@ export default function AllocationPage() {
                     type="radio"
                     name="targetType"
                     checked={allocateForm.targetType === "employee"}
-                    onChange={() => setAllocateForm({ ...allocateForm, targetType: "employee" })}
+                    onChange={() =>
+                      setAllocateForm({
+                        ...allocateForm,
+                        targetType: "employee",
+                      })
+                    }
                   />
                   Employee
                 </label>
@@ -615,7 +664,12 @@ export default function AllocationPage() {
                     type="radio"
                     name="targetType"
                     checked={allocateForm.targetType === "department"}
-                    onChange={() => setAllocateForm({ ...allocateForm, targetType: "department" })}
+                    onChange={() =>
+                      setAllocateForm({
+                        ...allocateForm,
+                        targetType: "department",
+                      })
+                    }
                   />
                   Department
                 </label>
@@ -627,7 +681,9 @@ export default function AllocationPage() {
                 label="Select Employee"
                 options={employeeOptions}
                 selectedOption={
-                  employeeOptions.find((o) => o.value === allocateForm.userId) ?? (null as any)
+                  employeeOptions.find(
+                    (o) => o.value === allocateForm.userId,
+                  ) ?? (null as any)
                 }
                 onChange={(val: any) =>
                   setAllocateForm({ ...allocateForm, userId: val?.value || "" })
@@ -639,10 +695,15 @@ export default function AllocationPage() {
                 label="Select Department"
                 options={departmentOptions}
                 selectedOption={
-                  departmentOptions.find((o) => o.value === allocateForm.departmentId) ?? (null as any)
+                  departmentOptions.find(
+                    (o) => o.value === allocateForm.departmentId,
+                  ) ?? (null as any)
                 }
                 onChange={(val: any) =>
-                  setAllocateForm({ ...allocateForm, departmentId: val?.value || "" })
+                  setAllocateForm({
+                    ...allocateForm,
+                    departmentId: val?.value || "",
+                  })
                 }
                 required
               />
@@ -653,7 +714,10 @@ export default function AllocationPage() {
               type="date"
               value={allocateForm.expectedReturnDate}
               onChange={(e) =>
-                setAllocateForm({ ...allocateForm, expectedReturnDate: e.target.value })
+                setAllocateForm({
+                  ...allocateForm,
+                  expectedReturnDate: e.target.value,
+                })
               }
             />
           </ModalBody>
@@ -666,7 +730,11 @@ export default function AllocationPage() {
       </Modal>
 
       {/* --- RETURN MODAL --- */}
-      <Modal isOpen={isReturnOpen} onClose={() => setReturnOpen(false)} width="sm">
+      <Modal
+        isOpen={isReturnOpen}
+        onClose={() => setReturnOpen(false)}
+        width="sm"
+      >
         <ModalHeader>
           <ModalTitle title={`Return ${selectedAsset?.name || "Asset"}`} />
         </ModalHeader>
@@ -687,10 +755,15 @@ export default function AllocationPage() {
               label="Check-in Condition"
               options={conditionOptions}
               selectedOption={
-                conditionOptions.find((o) => o.value === returnForm.condition) ?? (null as any)
+                conditionOptions.find(
+                  (o) => o.value === returnForm.condition,
+                ) ?? (null as any)
               }
               onChange={(val: any) =>
-                setReturnForm({ ...returnForm, condition: val?.value || "GOOD" })
+                setReturnForm({
+                  ...returnForm,
+                  condition: val?.value || "GOOD",
+                })
               }
               required
             />
@@ -698,7 +771,9 @@ export default function AllocationPage() {
               label="Check-in Notes"
               placeholder="E.g., Minor cosmetic scratches on the back"
               value={returnForm.notes}
-              onChange={(e) => setReturnForm({ ...returnForm, notes: e.target.value })}
+              onChange={(e) =>
+                setReturnForm({ ...returnForm, notes: e.target.value })
+              }
             />
           </ModalBody>
           <ModalFooter>
@@ -710,9 +785,15 @@ export default function AllocationPage() {
       </Modal>
 
       {/* --- TRANSFER MODAL --- */}
-      <Modal isOpen={isTransferOpen} onClose={() => setTransferOpen(false)} width="sm">
+      <Modal
+        isOpen={isTransferOpen}
+        onClose={() => setTransferOpen(false)}
+        width="sm"
+      >
         <ModalHeader>
-          <ModalTitle title={`Request Transfer for ${selectedAsset?.name || "Asset"}`} />
+          <ModalTitle
+            title={`Request Transfer for ${selectedAsset?.name || "Asset"}`}
+          />
         </ModalHeader>
         <form
           onSubmit={(e) => {
@@ -720,8 +801,14 @@ export default function AllocationPage() {
             if (selectedAsset) {
               transferRequestMutation.mutate({
                 assetId: selectedAsset.id,
-                targetUserId: transferForm.targetType === "employee" ? transferForm.userId : null,
-                targetDeptId: transferForm.targetType === "department" ? transferForm.departmentId : null,
+                targetUserId:
+                  transferForm.targetType === "employee"
+                    ? transferForm.userId
+                    : null,
+                targetDeptId:
+                  transferForm.targetType === "department"
+                    ? transferForm.departmentId
+                    : null,
               });
             }
           }}
@@ -730,9 +817,12 @@ export default function AllocationPage() {
             <p className="text-sm text-gray-500">
               This asset is currently allocated to{" "}
               <strong className="text-gray-900">
-                {selectedAsset?.user?.name || selectedAsset?.department?.name || "another owner"}
+                {selectedAsset?.user?.name ||
+                  selectedAsset?.department?.name ||
+                  "another owner"}
               </strong>
-              . Submitting this request will alert administrators/managers for approval.
+              . Submitting this request will alert administrators/managers for
+              approval.
             </p>
 
             <div>
@@ -745,7 +835,12 @@ export default function AllocationPage() {
                     type="radio"
                     name="transferTargetType"
                     checked={transferForm.targetType === "employee"}
-                    onChange={() => setTransferForm({ ...transferForm, targetType: "employee" })}
+                    onChange={() =>
+                      setTransferForm({
+                        ...transferForm,
+                        targetType: "employee",
+                      })
+                    }
                   />
                   Employee
                 </label>
@@ -754,7 +849,12 @@ export default function AllocationPage() {
                     type="radio"
                     name="transferTargetType"
                     checked={transferForm.targetType === "department"}
-                    onChange={() => setTransferForm({ ...transferForm, targetType: "department" })}
+                    onChange={() =>
+                      setTransferForm({
+                        ...transferForm,
+                        targetType: "department",
+                      })
+                    }
                   />
                   Department
                 </label>
@@ -766,7 +866,9 @@ export default function AllocationPage() {
                 label="Select Employee"
                 options={employeeOptions}
                 selectedOption={
-                  employeeOptions.find((o) => o.value === transferForm.userId) ?? (null as any)
+                  employeeOptions.find(
+                    (o) => o.value === transferForm.userId,
+                  ) ?? (null as any)
                 }
                 onChange={(val: any) =>
                   setTransferForm({ ...transferForm, userId: val?.value || "" })
@@ -778,10 +880,15 @@ export default function AllocationPage() {
                 label="Select Department"
                 options={departmentOptions}
                 selectedOption={
-                  departmentOptions.find((o) => o.value === transferForm.departmentId) ?? (null as any)
+                  departmentOptions.find(
+                    (o) => o.value === transferForm.departmentId,
+                  ) ?? (null as any)
                 }
                 onChange={(val: any) =>
-                  setTransferForm({ ...transferForm, departmentId: val?.value || "" })
+                  setTransferForm({
+                    ...transferForm,
+                    departmentId: val?.value || "",
+                  })
                 }
                 required
               />
@@ -789,7 +896,9 @@ export default function AllocationPage() {
           </ModalBody>
           <ModalFooter>
             <Button type="submit" disabled={transferRequestMutation.isPending}>
-              {transferRequestMutation.isPending ? "Submitting..." : "Submit Transfer Request"}
+              {transferRequestMutation.isPending
+                ? "Submitting..."
+                : "Submit Transfer Request"}
             </Button>
           </ModalFooter>
         </form>

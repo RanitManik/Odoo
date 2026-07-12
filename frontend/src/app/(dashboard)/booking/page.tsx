@@ -71,7 +71,9 @@ export default function BookingPage() {
     },
   });
 
-  const { data: bookings = [], isLoading: bookingsLoading } = useQuery<Booking[]>({
+  const { data: bookings = [], isLoading: bookingsLoading } = useQuery<
+    Booking[]
+  >({
     queryKey: ["bookings", selectedAssetId],
     queryFn: async () => {
       const res = await api.get("/bookings", {
@@ -86,7 +88,11 @@ export default function BookingPage() {
 
   // Mutations
   const createBookingMutation = useMutation({
-    mutationFn: async (payload: { assetId: string; startTime: string; endTime: string }) => {
+    mutationFn: async (payload: {
+      assetId: string;
+      startTime: string;
+      endTime: string;
+    }) => {
       const res = await api.post("/bookings", payload);
       return res.data;
     },
@@ -118,7 +124,9 @@ export default function BookingPage() {
     e.preventDefault();
 
     // Construct full ISO strings for startTime and endTime
-    const startISO = new Date(`${form.date}T${form.startTime}:00`).toISOString();
+    const startISO = new Date(
+      `${form.date}T${form.startTime}:00`,
+    ).toISOString();
     const endISO = new Date(`${form.date}T${form.endTime}:00`).toISOString();
 
     createBookingMutation.mutate({
@@ -145,7 +153,9 @@ export default function BookingPage() {
       formatValue: (_: any, row: Booking) => (
         <div>
           <div className="font-semibold text-gray-800">{row.asset.name}</div>
-          <div className="font-mono text-xs text-gray-400">{row.asset.assetTag}</div>
+          <div className="font-mono text-xs text-gray-400">
+            {row.asset.assetTag}
+          </div>
         </div>
       ),
     },
@@ -169,8 +179,15 @@ export default function BookingPage() {
           <div className="text-sm text-gray-600">
             <div className="font-medium">{start.toLocaleDateString()}</div>
             <div>
-              {start.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} -{" "}
-              {end.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              {start.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}{" "}
+              -{" "}
+              {end.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
             </div>
           </div>
         );
@@ -187,7 +204,9 @@ export default function BookingPage() {
           CANCELLED: "bg-red-100 text-red-800",
         }[row.status];
         return (
-          <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${styles}`}>
+          <span
+            className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${styles}`}
+          >
             {row.status.charAt(0) + row.status.slice(1).toLowerCase()}
           </span>
         );
@@ -198,7 +217,7 @@ export default function BookingPage() {
       label: "Actions",
       formatValue: (_: any, row: Booking) => {
         if (row.status === "CANCELLED" || row.status === "COMPLETED") {
-          return <span className="text-gray-400 text-xs">—</span>;
+          return <span className="text-xs text-gray-400">—</span>;
         }
         return (
           <Button
@@ -209,7 +228,7 @@ export default function BookingPage() {
                 isOpen: true,
                 title: "Cancel Booking",
                 description: `Are you sure you want to cancel the booking for "${row.asset.name}" on ${new Date(
-                  row.startTime
+                  row.startTime,
                 ).toLocaleDateString()}?`,
                 action: () => cancelBookingMutation.mutate(row.id),
               })
@@ -230,7 +249,8 @@ export default function BookingPage() {
             Resource Booking
           </h2>
           <p className="text-muted-foreground mt-2">
-            Book shared workspaces, meeting rooms, or equipment without schedules overlapping.
+            Book shared workspaces, meeting rooms, or equipment without
+            schedules overlapping.
           </p>
         </div>
         <Button onClick={() => setBookModalOpen(true)}>
@@ -240,12 +260,13 @@ export default function BookingPage() {
       </div>
 
       {/* Asset Filter Bar */}
-      <div className="flex items-center gap-4 ">
+      <div className="flex items-center gap-4">
         <div className="w-72">
           <Select
             options={filterAssetOptions}
             selectedOption={
-              filterAssetOptions.find((o) => o.value === selectedAssetId) ?? (null as any)
+              filterAssetOptions.find((o) => o.value === selectedAssetId) ??
+              (null as any)
             }
             onChange={(val: any) => setSelectedAssetId(val?.value || "")}
           />
@@ -261,12 +282,14 @@ export default function BookingPage() {
           <div className="border-primary h-6 w-6 animate-spin rounded-full border-2 border-t-transparent" />
         </div>
       ) : bookings.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-center bg-white rounded-xl border border-gray-200">
+        <div className="flex flex-col items-center justify-center rounded-xl border border-gray-200 bg-white py-16 text-center">
           <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
             <CalendarClock className="h-7 w-7 text-gray-400" />
           </div>
-          <p className="mb-1 text-sm font-medium text-gray-900">No active bookings found</p>
-          <p className="text-sm text-gray-500 mb-5">
+          <p className="mb-1 text-sm font-medium text-gray-900">
+            No active bookings found
+          </p>
+          <p className="mb-5 text-sm text-gray-500">
             Book a shared resource using the button above to reserve a slot.
           </p>
           <Button size="sm" onClick={() => setBookModalOpen(true)}>
@@ -285,7 +308,11 @@ export default function BookingPage() {
       )}
 
       {/* --- BOOKING MODAL --- */}
-      <Modal isOpen={isBookModalOpen} onClose={() => setBookModalOpen(false)} width="sm">
+      <Modal
+        isOpen={isBookModalOpen}
+        onClose={() => setBookModalOpen(false)}
+        width="sm"
+      >
         <ModalHeader>
           <ModalTitle title="Book Shared Resource" />
         </ModalHeader>
@@ -293,10 +320,10 @@ export default function BookingPage() {
           <ModalBody className="space-y-4">
             {assetOptions.length === 0 ? (
               <div className="flex w-full items-start gap-2 border border-yellow-500 bg-yellow-50 px-3 py-2 text-xs text-yellow-800">
-                <AlertCircle className="h-4 w-4 shrink-0 text-yellow-600 mt-0.5" />
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-yellow-600" />
                 <span>
                   No shared resources available. Go to the{" "}
-                  <a href="/assets" className="underline font-bold">
+                  <a href="/assets" className="font-bold underline">
                     Assets Directory
                   </a>{" "}
                   and toggle &ldquo;Bookable&rdquo; on for some assets.
@@ -307,9 +334,12 @@ export default function BookingPage() {
                 label="Select Resource"
                 options={assetOptions}
                 selectedOption={
-                  assetOptions.find((o) => o.value === form.assetId) ?? (null as any)
+                  assetOptions.find((o) => o.value === form.assetId) ??
+                  (null as any)
                 }
-                onChange={(val: any) => setForm({ ...form, assetId: val?.value || "" })}
+                onChange={(val: any) =>
+                  setForm({ ...form, assetId: val?.value || "" })
+                }
                 required
               />
             )}
@@ -325,7 +355,9 @@ export default function BookingPage() {
                 label="Start Time"
                 type="time"
                 value={form.startTime}
-                onChange={(e) => setForm({ ...form, startTime: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, startTime: e.target.value })
+                }
                 required
               />
               <Input
@@ -339,7 +371,9 @@ export default function BookingPage() {
           </ModalBody>
           <ModalFooter>
             <Button type="submit" disabled={createBookingMutation.isPending}>
-              {createBookingMutation.isPending ? "Reserving..." : "Confirm Booking"}
+              {createBookingMutation.isPending
+                ? "Reserving..."
+                : "Confirm Booking"}
             </Button>
           </ModalFooter>
         </form>

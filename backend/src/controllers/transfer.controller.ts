@@ -66,7 +66,9 @@ export const approveTransfer = async (req: AuthRequest, res: Response) => {
   if (transfer.status !== "PENDING") {
     return res
       .status(400)
-      .json({ error: `Transfer request is already ${transfer.status.toLowerCase()}` });
+      .json({
+        error: `Transfer request is already ${transfer.status.toLowerCase()}`,
+      });
   }
 
   // Update Transfer Status
@@ -118,7 +120,9 @@ export const rejectTransfer = async (req: AuthRequest, res: Response) => {
   if (transfer.status !== "PENDING") {
     return res
       .status(400)
-      .json({ error: `Transfer request is already ${transfer.status.toLowerCase()}` });
+      .json({
+        error: `Transfer request is already ${transfer.status.toLowerCase()}`,
+      });
   }
 
   const updatedTransfer = await prisma.transferRequest.update({

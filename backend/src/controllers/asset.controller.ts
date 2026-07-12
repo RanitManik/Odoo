@@ -31,7 +31,10 @@ const createAssetSchema = z.object({
 const updateAssetSchema = z.object({
   name: z.string().min(1).optional(),
   serialNumber: z.string().optional().nullable(),
-  acquisitionDate: z.string().transform((v) => new Date(v)).optional(),
+  acquisitionDate: z
+    .string()
+    .transform((v) => new Date(v))
+    .optional(),
   acquisitionCost: z.number().nonnegative().optional().nullable(),
   condition: z.enum(["NEW", "GOOD", "FAIR", "POOR", "DAMAGED"]).optional(),
   location: z.string().optional().nullable(),
@@ -179,13 +182,19 @@ export const updateAsset = async (req: AuthRequest, res: Response) => {
     changes.push(`Name changed from "${existingAsset.name}" to "${data.name}"`);
   }
   if (data.status && data.status !== existingAsset.status) {
-    changes.push(`Status changed from ${existingAsset.status} to ${data.status}`);
+    changes.push(
+      `Status changed from ${existingAsset.status} to ${data.status}`,
+    );
   }
   if (data.condition && data.condition !== existingAsset.condition) {
-    changes.push(`Condition changed from ${existingAsset.condition} to ${data.condition}`);
+    changes.push(
+      `Condition changed from ${existingAsset.condition} to ${data.condition}`,
+    );
   }
   if (data.location !== undefined && data.location !== existingAsset.location) {
-    changes.push(`Location changed from "${existingAsset.location || "None"}" to "${data.location || "None"}"`);
+    changes.push(
+      `Location changed from "${existingAsset.location || "None"}" to "${data.location || "None"}"`,
+    );
   }
 
   const asset = await prisma.asset.update({
@@ -395,7 +404,9 @@ export const createTransferRequest = async (
       assetId: id,
       action: "TRANSFER_REQUESTED",
       details: `Transfer requested to ${
-        data.targetUserId ? "User " + data.targetUserId : "Dept " + data.targetDeptId
+        data.targetUserId
+          ? "User " + data.targetUserId
+          : "Dept " + data.targetDeptId
       }`,
       userId: currentUserId,
     },

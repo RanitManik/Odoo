@@ -34,7 +34,13 @@ interface MaintenanceRequest {
   user: { id: string; name: string; email: string };
   description: string;
   priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
-  status: "PENDING" | "APPROVED" | "REJECTED" | "TECHNICIAN_ASSIGNED" | "IN_PROGRESS" | "RESOLVED";
+  status:
+    | "PENDING"
+    | "APPROVED"
+    | "REJECTED"
+    | "TECHNICIAN_ASSIGNED"
+    | "IN_PROGRESS"
+    | "RESOLVED";
   technician: string | null;
   photo: string | null;
   createdAt: string;
@@ -42,12 +48,15 @@ interface MaintenanceRequest {
 
 export default function MaintenancePage() {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState<"requests" | "history">("requests");
+  const [activeTab, setActiveTab] = useState<"requests" | "history">(
+    "requests",
+  );
 
   // Modals state
   const [isRaiseOpen, setRaiseOpen] = useState(false);
   const [isAssignOpen, setAssignOpen] = useState(false);
-  const [selectedRequest, setSelectedRequest] = useState<MaintenanceRequest | null>(null);
+  const [selectedRequest, setSelectedRequest] =
+    useState<MaintenanceRequest | null>(null);
 
   // Forms state
   const [raiseForm, setRaiseForm] = useState({
@@ -83,7 +92,9 @@ export default function MaintenancePage() {
     },
   });
 
-  const { data: requests = [], isLoading: requestsLoading } = useQuery<MaintenanceRequest[]>({
+  const { data: requests = [], isLoading: requestsLoading } = useQuery<
+    MaintenanceRequest[]
+  >({
     queryKey: ["maintenance-requests"],
     queryFn: async () => {
       const res = await api.get("/maintenance");
@@ -187,8 +198,12 @@ export default function MaintenancePage() {
   ];
 
   // Columns
-  const activeRequests = requests.filter((r) => r.status !== "RESOLVED" && r.status !== "REJECTED");
-  const resolvedRequests = requests.filter((r) => r.status === "RESOLVED" || r.status === "REJECTED");
+  const activeRequests = requests.filter(
+    (r) => r.status !== "RESOLVED" && r.status !== "REJECTED",
+  );
+  const resolvedRequests = requests.filter(
+    (r) => r.status === "RESOLVED" || r.status === "REJECTED",
+  );
 
   const priorityStyles = {
     LOW: "bg-gray-100 text-gray-800",
@@ -213,7 +228,9 @@ export default function MaintenancePage() {
       formatValue: (_: any, row: MaintenanceRequest) => (
         <div>
           <div className="font-semibold text-gray-800">{row.asset.name}</div>
-          <div className="font-mono text-xs text-gray-400">{row.asset.assetTag}</div>
+          <div className="font-mono text-xs text-gray-400">
+            {row.asset.assetTag}
+          </div>
         </div>
       ),
     },
@@ -222,7 +239,9 @@ export default function MaintenancePage() {
       key: "priority",
       label: "Priority",
       formatValue: (_: any, row: MaintenanceRequest) => (
-        <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${priorityStyles[row.priority]}`}>
+        <span
+          className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${priorityStyles[row.priority]}`}
+        >
           {row.priority}
         </span>
       ),
@@ -232,7 +251,9 @@ export default function MaintenancePage() {
       label: "Workflow Status",
       formatValue: (_: any, row: MaintenanceRequest) => (
         <div>
-          <span className="text-sm font-medium text-gray-800">{statusLabels[row.status]}</span>
+          <span className="text-sm font-medium text-gray-800">
+            {statusLabels[row.status]}
+          </span>
           {row.technician && (
             <div className="text-xs text-gray-400">Tech: {row.technician}</div>
           )}
@@ -244,8 +265,12 @@ export default function MaintenancePage() {
       label: "Raised By",
       formatValue: (_: any, row: MaintenanceRequest) => (
         <div>
-          <div className="text-sm font-medium text-gray-700">{row.user.name}</div>
-          <div className="text-xs text-gray-400">{new Date(row.createdAt).toLocaleDateString()}</div>
+          <div className="text-sm font-medium text-gray-700">
+            {row.user.name}
+          </div>
+          <div className="text-xs text-gray-400">
+            {new Date(row.createdAt).toLocaleDateString()}
+          </div>
         </div>
       ),
     },
@@ -330,7 +355,7 @@ export default function MaintenancePage() {
             </Button>
           );
         }
-        return <span className="text-gray-400 text-xs">—</span>;
+        return <span className="text-xs text-gray-400">—</span>;
       },
     },
   ];
@@ -343,7 +368,8 @@ export default function MaintenancePage() {
             Maintenance Management
           </h2>
           <p className="text-muted-foreground mt-2">
-            Route asset repair requests through approvals, technician dispatch, and workflow status logs.
+            Route asset repair requests through approvals, technician dispatch,
+            and workflow status logs.
           </p>
         </div>
         <Button onClick={() => setRaiseOpen(true)}>
@@ -391,13 +417,16 @@ export default function MaintenancePage() {
         </div>
       ) : activeTab === "requests" ? (
         activeRequests.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-center bg-white border border-gray-200">
+          <div className="flex flex-col items-center justify-center border border-gray-200 bg-white py-16 text-center">
             <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
               <Wrench className="h-7 w-7 text-gray-400" />
             </div>
-            <p className="mb-1 text-sm font-medium text-gray-900">No active maintenance requests</p>
-            <p className="text-sm text-gray-500 mb-5">
-              All active requests requiring approval or currently under repair will appear here.
+            <p className="mb-1 text-sm font-medium text-gray-900">
+              No active maintenance requests
+            </p>
+            <p className="mb-5 text-sm text-gray-500">
+              All active requests requiring approval or currently under repair
+              will appear here.
             </p>
             <Button size="sm" onClick={() => setRaiseOpen(true)}>
               Raise Request
@@ -414,11 +443,13 @@ export default function MaintenancePage() {
           />
         )
       ) : resolvedRequests.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-center bg-white rounded-xl border border-gray-200">
+        <div className="flex flex-col items-center justify-center rounded-xl border border-gray-200 bg-white py-16 text-center">
           <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
             <Clock className="h-7 w-7 text-gray-400" />
           </div>
-          <p className="mb-1 text-sm font-medium text-gray-900">No resolved requests found</p>
+          <p className="mb-1 text-sm font-medium text-gray-900">
+            No resolved requests found
+          </p>
           <p className="text-sm text-gray-500">
             Completed repair requests and logs will be cataloged here.
           </p>
@@ -435,7 +466,11 @@ export default function MaintenancePage() {
       )}
 
       {/* --- RAISE REQUEST MODAL --- */}
-      <Modal isOpen={isRaiseOpen} onClose={() => setRaiseOpen(false)} width="sm">
+      <Modal
+        isOpen={isRaiseOpen}
+        onClose={() => setRaiseOpen(false)}
+        width="sm"
+      >
         <ModalHeader>
           <ModalTitle title="Raise Maintenance Request" />
         </ModalHeader>
@@ -450,19 +485,26 @@ export default function MaintenancePage() {
               label="Select Asset"
               options={assetOptions}
               selectedOption={
-                assetOptions.find((o) => o.value === raiseForm.assetId) ?? (null as any)
+                assetOptions.find((o) => o.value === raiseForm.assetId) ??
+                (null as any)
               }
-              onChange={(val: any) => setRaiseForm({ ...raiseForm, assetId: val?.value || "" })}
+              onChange={(val: any) =>
+                setRaiseForm({ ...raiseForm, assetId: val?.value || "" })
+              }
               required
             />
             <Select
               label="Priority"
               options={priorityOptions}
               selectedOption={
-                priorityOptions.find((o) => o.value === raiseForm.priority) ?? priorityOptions[1]
+                priorityOptions.find((o) => o.value === raiseForm.priority) ??
+                priorityOptions[1]
               }
               onChange={(val: any) =>
-                setRaiseForm({ ...raiseForm, priority: (val?.value as any) || "MEDIUM" })
+                setRaiseForm({
+                  ...raiseForm,
+                  priority: (val?.value as any) || "MEDIUM",
+                })
               }
               required
             />
@@ -470,21 +512,29 @@ export default function MaintenancePage() {
               label="Description of Issue"
               placeholder="E.g., Screen flickers when adjusting angle"
               value={raiseForm.description}
-              onChange={(e) => setRaiseForm({ ...raiseForm, description: e.target.value })}
+              onChange={(e) =>
+                setRaiseForm({ ...raiseForm, description: e.target.value })
+              }
               required
               rows={4}
             />
           </ModalBody>
           <ModalFooter>
             <Button type="submit" disabled={raiseRequestMutation.isPending}>
-              {raiseRequestMutation.isPending ? "Submitting..." : "Submit Request"}
+              {raiseRequestMutation.isPending
+                ? "Submitting..."
+                : "Submit Request"}
             </Button>
           </ModalFooter>
         </form>
       </Modal>
 
       {/* --- ASSIGN TECH MODAL --- */}
-      <Modal isOpen={isAssignOpen} onClose={() => setAssignOpen(false)} width="sm">
+      <Modal
+        isOpen={isAssignOpen}
+        onClose={() => setAssignOpen(false)}
+        width="sm"
+      >
         <ModalHeader>
           <ModalTitle title="Assign Technician" />
         </ModalHeader>

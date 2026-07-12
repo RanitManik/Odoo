@@ -117,7 +117,9 @@ export const startAudit = async (req: AuthRequest, res: Response) => {
   }
 
   if (audit.status !== "SCHEDULED") {
-    return res.status(400).json({ error: "Audit is already started or completed" });
+    return res
+      .status(400)
+      .json({ error: "Audit is already started or completed" });
   }
 
   const updatedAudit = await prisma.audit.update({
@@ -214,7 +216,9 @@ export const resolveDiscrepancy = async (req: AuthRequest, res: Response) => {
   }
 
   if (audit.status !== "DISCREPANCY") {
-    return res.status(400).json({ error: "Audit does not have a flagged discrepancy" });
+    return res
+      .status(400)
+      .json({ error: "Audit does not have a flagged discrepancy" });
   }
 
   const updatedAudit = await prisma.audit.update({
