@@ -5,7 +5,7 @@ import {
   createEmployee,
   updateEmployee,
 } from "../controllers/employee.controller";
-import { authenticate } from "../middleware/auth.middleware";
+import { authenticate, authorizeRole } from "../middleware/auth.middleware";
 
 const router = Router();
 
@@ -14,8 +14,8 @@ router.use(authenticate);
 
 router.get("/", getAllEmployees);
 router.get("/:id", getEmployee);
-router.post("/", createEmployee);
-router.patch("/:id", updateEmployee);
-router.put("/:id", updateEmployee);
+router.post("/", authorizeRole(["ADMIN"]), createEmployee);
+router.patch("/:id", authorizeRole(["ADMIN"]), updateEmployee);
+router.put("/:id", authorizeRole(["ADMIN"]), updateEmployee);
 
 export default router;

@@ -269,8 +269,8 @@ export default function NotificationsPage() {
       {/* Tab Panels */}
       {activeTab === "notifications" ? (
         notificationsLoading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="border-primary h-6 w-6 animate-spin rounded-none border-2 border-t-transparent" />
+          <div className="flex justify-center p-8">
+            <div className="border-primary h-6 w-6 animate-spin rounded-full border-2 border-t-transparent" />
           </div>
         ) : notifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center bg-white rounded-none border-2 border-gray-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
@@ -351,7 +351,7 @@ export default function NotificationsPage() {
 
           {activitiesLoading ? (
             <div className="flex items-center justify-center py-20">
-              <div className="border-primary h-6 w-6 animate-spin rounded-none border-2 border-t-transparent" />
+              <div className="border-primary h-6 w-6 animate-spin rounded-full border-2 border-t-transparent" />
             </div>
           ) : filteredActivities.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center bg-white rounded-none border-2 border-gray-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">

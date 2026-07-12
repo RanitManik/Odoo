@@ -4,7 +4,7 @@ import {
   createAudit,
   startAudit,
   completeAudit,
-  resolveDiscrepancy,
+  closeAudit,
 } from "../controllers/audit.controller";
 import { authenticate } from "../middleware/auth.middleware";
 
@@ -17,6 +17,6 @@ router.get("/", getAllAudits);
 router.post("/", createAudit);
 router.post("/:id/start", startAudit);
 router.post("/:id/complete", completeAudit);
-router.post("/:id/resolve", resolveDiscrepancy);
+router.post("/:id/close", closeAudit);
 
 export default router;

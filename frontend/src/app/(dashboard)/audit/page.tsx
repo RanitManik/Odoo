@@ -74,8 +74,9 @@ export default function AuditPage() {
     notes: "",
   });
 
-  const [resolveForm, setResolveForm] = useState({
+  const [closeAuditForm, setCloseAuditForm] = useState({
     resolutionNotes: "",
+    finalAssetStatus: "AVAILABLE",
   });
 
   const [confirmState, setConfirmState] = useState<{
@@ -172,18 +173,18 @@ export default function AuditPage() {
     onError: (err) => toast.error(extractError(err)),
   });
 
-  const resolveDiscrepancyMutation = useMutation({
-    mutationFn: async (payload: { id: string; data: typeof resolveForm }) => {
-      const res = await api.post(`/audits/${payload.id}/resolve`, payload.data);
+  const closeAuditMutation = useMutation({
+    mutationFn: async (payload: { id: string; data: typeof closeAuditForm }) => {
+      const res = await api.post(`/audits/${payload.id}/close`, payload.data);
       return res.data;
     },
     onSuccess: () => {
-      toast.success("Discrepancy resolved and cleared!");
+      toast.success("Audit closed and asset status updated!");
       queryClient.invalidateQueries({ queryKey: ["audits"] });
       queryClient.invalidateQueries({ queryKey: ["assets"] });
       setResolveOpen(false);
       setSelectedAudit(null);
-      setResolveForm({ resolutionNotes: "" });
+      setCloseAuditForm({ resolutionNotes: "", finalAssetStatus: "AVAILABLE" });
     },
     onError: (err) => toast.error(extractError(err)),
   });
@@ -348,7 +349,7 @@ export default function AuditPage() {
                 setResolveOpen(true);
               }}
             >
-              Resolve Discrepancy
+              Close Audit Cycle
             </Button>
           );
         }
@@ -639,33 +640,54 @@ export default function AuditPage() {
         </form>
       </Modal>
 
-      {/* --- RESOLVE DISCREPANCY MODAL --- */}
+      {/* --- CLOSE AUDIT MODAL --- */}
       <Modal
         isOpen={isResolveOpen}
         onClose={() => setResolveOpen(false)}
         width="sm"
       >
         <ModalHeader>
-          <ModalTitle title="Resolve Flagged Discrepancy" />
+          <ModalTitle title="Close Audit Cycle" />
         </ModalHeader>
         <form
           onSubmit={(e) => {
             e.preventDefault();
             if (selectedAudit) {
-              resolveDiscrepancyMutation.mutate({
+              closeAuditMutation.mutate({
                 id: selectedAudit.id,
-                data: resolveForm,
+                data: closeAuditForm,
               });
             }
           }}
         >
           <ModalBody className="space-y-4">
+            <Select
+              label="Final Asset Status"
+              options={[
+                { label: "Available", value: "AVAILABLE" },
+                { label: "Lost / Missing", value: "LOST" },
+                { label: "Under Maintenance", value: "UNDER_MAINTENANCE" },
+                { label: "Retired", value: "RETIRED" },
+              ]}
+              selectedOption={
+                [
+                  { label: "Available", value: "AVAILABLE" },
+                  { label: "Lost / Missing", value: "LOST" },
+                  { label: "Under Maintenance", value: "UNDER_MAINTENANCE" },
+                  { label: "Retired", value: "RETIRED" },
+                ].find((o) => o.value === closeAuditForm.finalAssetStatus) ?? { label: "Available", value: "AVAILABLE" }
+              }
+              onChange={(val: any) =>
+                setCloseAuditForm({ ...closeAuditForm, finalAssetStatus: val.value })
+              }
+              required
+            />
             <Textarea
               label="Resolution Notes"
-              placeholder="Explain how discrepancy was resolved..."
-              value={resolveForm.resolutionNotes}
+              placeholder="Explain how discrepancy was resolved and why this status was chosen..."
+              value={closeAuditForm.resolutionNotes}
               onChange={(e) =>
-                setResolveForm({ resolutionNotes: e.target.value })
+                setCloseAuditForm({ ...closeAuditForm, resolutionNotes: e.target.value })
               }
               required
               rows={4}
@@ -674,11 +696,11 @@ export default function AuditPage() {
           <ModalFooter>
             <Button
               type="submit"
-              disabled={resolveDiscrepancyMutation.isPending}
+              disabled={closeAuditMutation.isPending}
             >
-              {resolveDiscrepancyMutation.isPending
-                ? "Resolving..."
-                : "Clear Discrepancy"}
+              {closeAuditMutation.isPending
+                ? "Closing..."
+                : "Close Audit"}
             </Button>
           </ModalFooter>
         </form>

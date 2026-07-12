@@ -17,8 +17,9 @@ const completeAuditSchema = z.object({
   isDiscrepancy: z.boolean(),
 });
 
-const resolveDiscrepancySchema = z.object({
+const closeAuditSchema = z.object({
   resolutionNotes: z.string().min(1, "Resolution notes are required"),
+  finalAssetStatus: z.enum(["AVAILABLE", "LOST", "UNDER_MAINTENANCE", "RETIRED", "ALLOCATED"]),
 });
 
 /**
@@ -208,11 +209,11 @@ export const completeAudit = async (req: AuthRequest, res: Response) => {
 };
 
 /**
- * POST /api/audits/:id/resolve
+ * POST /api/audits/:id/close
  */
-export const resolveDiscrepancy = async (req: AuthRequest, res: Response) => {
+export const closeAudit = async (req: AuthRequest, res: Response) => {
   const id = req.params.id as string;
-  const data = resolveDiscrepancySchema.parse(req.body);
+  const data = closeAuditSchema.parse(req.body);
   const currentUserId = req.user?.id || null;
 
   const audit = await prisma.audit.findUnique({
@@ -237,18 +238,18 @@ export const resolveDiscrepancy = async (req: AuthRequest, res: Response) => {
     },
   });
 
-  // Revert asset status back to AVAILABLE
+  // Apply final asset status (e.g., LOST for missing items, AVAILABLE if recovered)
   await prisma.asset.update({
     where: { id: audit.assetId },
-    data: { status: "AVAILABLE" },
+    data: { status: data.finalAssetStatus },
   });
 
   // Log in asset history
   await prisma.assetHistory.create({
     data: {
       assetId: audit.assetId,
-      action: "AUDIT_DISCREPANCY_RESOLVED",
-      details: `Audit discrepancy resolved: "${data.resolutionNotes}". Asset status reverted back to Available.`,
+      action: "AUDIT_CLOSED",
+      details: `Audit discrepancy closed. Notes: "${data.resolutionNotes}". Asset status updated to ${data.finalAssetStatus}.`,
       userId: currentUserId,
     },
   });

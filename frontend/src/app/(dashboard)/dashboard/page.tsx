@@ -13,7 +13,6 @@ import {
   ArrowRightLeft,
   CalendarClock,
   Wrench,
-  ClipboardList,
   AlertCircle,
 } from "lucide-react";
 import Button from "@/components/ui/button";
@@ -77,26 +76,18 @@ export default function DashboardPage() {
       },
     });
 
-  const { data: audits = [], isLoading: auditsLoading } = useQuery<any[]>({
-    queryKey: ["audits"],
-    queryFn: async () => {
-      const res = await api.get("/audits");
-      return res.data;
-    },
-  });
 
   const isLoading =
     deptsLoading ||
     assetsLoading ||
     transfersLoading ||
     bookingsLoading ||
-    maintenanceLoading ||
-    auditsLoading;
+    maintenanceLoading;
 
   if (isLoading) {
     return (
       <div className="flex h-[80vh] items-center justify-center">
-        <div className="border-primary h-8 w-8 animate-spin rounded-none border-4 border-t-transparent"></div>
+        <div className="border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent"></div>
       </div>
     );
   }
@@ -135,17 +126,27 @@ export default function DashboardPage() {
   const activeBookingsCount = bookings.filter(
     (b) => b.status === "UPCOMING" || b.status === "ONGOING",
   ).length;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
   const activeMaintenanceCount = maintenanceRequests.filter(
-    (r) => r.status !== "RESOLVED" && r.status !== "REJECTED",
-  ).length;
-  const activeAuditsCount = audits.filter(
-    (a) => a.status === "SCHEDULED" || a.status === "IN_PROGRESS",
+    (r) => r.status !== "RESOLVED" && r.status !== "REJECTED" && new Date(r.createdAt) >= today && new Date(r.createdAt) < tomorrow,
   ).length;
 
   const overdueAssets = assets.filter((a) => {
     if (a.status !== "ALLOCATED" || !a.expectedReturnDate) return false;
-    return new Date(a.expectedReturnDate) < new Date();
+    return new Date(a.expectedReturnDate) < today;
   });
+
+  const nextWeek = new Date(today);
+  nextWeek.setDate(nextWeek.getDate() + 7);
+  const upcomingReturnsCount = assets.filter((a) => {
+    if (a.status !== "ALLOCATED" || !a.expectedReturnDate) return false;
+    const returnDate = new Date(a.expectedReturnDate);
+    return returnDate >= today && returnDate <= nextWeek;
+  }).length;
 
   // --- Normal Dashboard (Screen 2 Mockup) ---
   return (
@@ -183,7 +184,7 @@ export default function DashboardPage() {
         <div className="border-2 border-gray-900 bg-white rounded-none p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-md">
           <div className="text-muted-foreground flex items-center space-x-2 text-sm font-medium">
             <Wrench className="h-4 w-4" />
-            <span>Maintenance</span>
+            <span>Maintenance Today</span>
           </div>
           <div className="text-foreground mt-4 text-4xl font-bold">
             {activeMaintenanceCount}
@@ -202,11 +203,11 @@ export default function DashboardPage() {
 
         <div className="border-2 border-gray-900 bg-white rounded-none p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-md">
           <div className="text-muted-foreground flex items-center space-x-2 text-sm font-medium">
-            <ClipboardList className="h-4 w-4" />
-            <span>Active Audits</span>
+            <Clock className="h-4 w-4" />
+            <span>Upcoming Returns</span>
           </div>
           <div className="text-foreground mt-4 text-4xl font-bold">
-            {activeAuditsCount}
+            {upcomingReturnsCount}
           </div>
         </div>
 
