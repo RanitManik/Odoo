@@ -39,7 +39,10 @@ export default function SignupPage() {
   return (
     <div className="relative min-h-screen w-full bg-white">
       {/* Logo at top-left corner */}
-      <Link href="/" className="absolute top-6 left-6 z-10 flex items-center gap-3 transition-transform hover:-translate-y-1">
+      <Link
+        href="/"
+        className="absolute top-6 left-6 z-10 flex items-center gap-3 transition-transform hover:-translate-y-1"
+      >
         <img src="/logo.svg" alt="AssetFlow Logo" className="h-10 w-auto" />
         <span className="text-2xl font-black tracking-tight text-gray-900">
           AssetFlow
@@ -152,37 +155,35 @@ export default function SignupPage() {
             </svg>
 
             {/* Decorative blurs */}
-            <div className="bg-primary/20 absolute top-1/4 right-1/4 h-64 w-64 animate-pulse rounded-full opacity-70 mix-blend-multiply blur-3xl filter"></div>
-            <div className="absolute bottom-1/4 left-1/4 h-72 w-72 rounded-full bg-blue-300/30 opacity-70 mix-blend-multiply blur-3xl filter"></div>
+            <div className="bg-primary/20 absolute top-1/4 left-1/4 h-64 w-64 animate-pulse rounded-full opacity-70 mix-blend-multiply blur-3xl filter"></div>
+            <div className="absolute right-1/4 bottom-1/4 h-72 w-72 rounded-full bg-blue-300/30 opacity-70 mix-blend-multiply blur-3xl filter"></div>
 
             {/* Content */}
             <div className="relative z-10 max-w-lg rounded-2xl border border-white/50 bg-white/40 p-10 text-center shadow-xl backdrop-blur-md">
               <h2 className="font-varela mb-4 text-3xl leading-tight font-bold text-gray-900">
-                Empower your workforce
+                Streamline your asset management today
               </h2>
               <p className="font-lato mb-8 text-lg text-gray-600">
-                Join our platform to securely access the tools and equipment you
-                need to excel in your daily tasks.
+                Join thousands of organizations using AssetFlow to track
+                equipment, manage depreciation, and optimize their resources.
               </p>
 
               <div className="flex items-center justify-center gap-4 text-sm font-medium text-gray-700">
-                <div className="flex items-center justify-center rounded-full bg-white p-3 shadow-sm">
-                  <svg
-                    className="h-6 w-6 text-green-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                    ></path>
-                  </svg>
+                <div className="flex -space-x-3">
+                  <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-gray-200">
+                    <img src="https://i.pravatar.cc/100?img=1" alt="User" />
+                  </div>
+                  <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-gray-200">
+                    <img src="https://i.pravatar.cc/100?img=2" alt="User" />
+                  </div>
+                  <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-gray-200">
+                    <img src="https://i.pravatar.cc/100?img=3" alt="User" />
+                  </div>
+                  <div className="bg-primary flex h-10 w-10 items-center justify-center rounded-full border-2 border-white text-xs text-white">
+                    +2k
+                  </div>
                 </div>
-                <span>Bank-grade secure authentication</span>
+                <span>Trusted by modern teams</span>
               </div>
             </div>
           </div>
