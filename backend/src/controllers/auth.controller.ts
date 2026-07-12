@@ -73,12 +73,11 @@ export const login = async (req: Request, res: Response) => {
 
   const token = signToken({ userId: user.id });
 
-  const isLocalhost =
-    req.hostname === "localhost" || req.hostname === "127.0.0.1";
+  const isSecure = process.env.NODE_ENV === "production" || (req.headers.origin && req.headers.origin.startsWith("https"));
   res.cookie("token", token, {
     httpOnly: true,
-    secure: !isLocalhost,
-    sameSite: !isLocalhost ? "none" : "lax",
+    secure: !!isSecure,
+    sameSite: isSecure ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
@@ -95,12 +94,11 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const logout = (req: Request, res: Response) => {
-  const isLocalhost =
-    req.hostname === "localhost" || req.hostname === "127.0.0.1";
+  const isSecure = process.env.NODE_ENV === "production" || (req.headers.origin && req.headers.origin.startsWith("https"));
   res.clearCookie("token", {
     httpOnly: true,
-    secure: !isLocalhost,
-    sameSite: !isLocalhost ? "none" : "lax",
+    secure: !!isSecure,
+    sameSite: isSecure ? "none" : "lax",
   });
   return res.json({ message: "Logged out successfully" });
 };
