@@ -33,7 +33,6 @@ interface DeleteConfirmationModalProps {
  * DeleteConfirmationModal
  *
  * A simple confirmation dialog for destructive delete actions.
- * Adapted from Busiman's delete-confirmation-modal-2 pattern.
  * Shows a warning banner and Cancel + Delete buttons.
  *
  * Usage:

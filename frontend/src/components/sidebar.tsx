@@ -51,9 +51,7 @@ export function Sidebar() {
     <aside className="flex h-screen w-72 flex-shrink-0 flex-col border-r border-gray-200 bg-white shadow-sm">
       {/* Logo */}
       <Link href="/" className="flex h-[60px] items-center gap-2 border-b border-gray-200 px-5 transition-colors hover:bg-gray-50">
-        <div className="bg-primary flex h-7 w-7 items-center justify-center border-2 border-gray-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-          <span className="text-sm font-black text-white">A</span>
-        </div>
+        <img src="/logo.svg" alt="AssetFlow Logo" className="h-8 w-auto" />
         <span className="text-xl font-black tracking-tight text-gray-900">
           AssetFlow
         </span>
