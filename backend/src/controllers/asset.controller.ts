@@ -57,7 +57,15 @@ const updateAssetSchema = z.object({
  * GET /api/assets
  */
 export const getAllAssets = async (req: AuthRequest, res: Response) => {
+  const { status, categoryId, departmentId } = req.query;
+
+  const whereClause: any = {};
+  if (status) whereClause.status = String(status);
+  if (categoryId) whereClause.categoryId = String(categoryId);
+  if (departmentId) whereClause.departmentId = String(departmentId);
+
   const assets = await prisma.asset.findMany({
+    where: whereClause,
     include: {
       category: { select: { id: true, name: true } },
       department: { select: { id: true, name: true } },
