@@ -2,6 +2,7 @@ import { Response } from "express";
 import { AuthRequest } from "../middleware/auth.middleware";
 import { prisma } from "../lib/prisma";
 import { z } from "zod";
+import { notifyAdminsAndManagers } from "../services/notification.service";
 
 const createAuditSchema = z.object({
   assetId: z.string().uuid("Invalid asset ID"),
@@ -184,6 +185,13 @@ export const completeAudit = async (req: AuthRequest, res: Response) => {
         userId: currentUserId,
       },
     });
+
+    // Notify admins and managers about the audit discrepancy
+    await notifyAdminsAndManagers(
+      "Audit Discrepancy Found",
+      `A discrepancy was flagged during physical audit of asset ID "${audit.assetId}". Condition: ${data.verifiedCondition}. Details: ${data.notes || "None"}`,
+      "AUDIT_DISCREPANCY"
+    );
   } else {
     // Log in asset history
     await prisma.assetHistory.create({

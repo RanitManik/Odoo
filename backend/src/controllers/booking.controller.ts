@@ -2,6 +2,7 @@ import { Response } from "express";
 import { AuthRequest } from "../middleware/auth.middleware";
 import { prisma } from "../lib/prisma";
 import { z } from "zod";
+import { createNotification } from "../services/notification.service";
 
 const createBookingSchema = z.object({
   assetId: z.string().uuid("Invalid asset ID"),
@@ -125,6 +126,14 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
     },
   });
 
+  // Notify user that booking is confirmed
+  await createNotification(
+    currentUserId,
+    "Booking Confirmed",
+    `Your reservation for "${booking.asset.name}" from ${booking.startTime.toLocaleString()} to ${booking.endTime.toLocaleString()} has been confirmed.`,
+    "BOOKING_CONFIRMED"
+  );
+
   return res.status(201).json(booking);
 };
 
@@ -161,6 +170,14 @@ export const cancelBooking = async (req: AuthRequest, res: Response) => {
       userId: currentUserId,
     },
   });
+
+  // Notify user that booking is cancelled
+  await createNotification(
+    booking.userId,
+    "Booking Cancelled",
+    `Your reservation for asset ID "${booking.assetId}" from ${booking.startTime.toLocaleString()} to ${booking.endTime.toLocaleString()} has been cancelled.`,
+    "BOOKING_CANCELLED"
+  );
 
   return res.json(updatedBooking);
 };

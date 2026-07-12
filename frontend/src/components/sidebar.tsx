@@ -48,19 +48,19 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="flex h-screen w-60 flex-shrink-0 flex-col border-r border-gray-200 bg-white">
+    <aside className="flex h-screen w-72 flex-shrink-0 flex-col border-r border-gray-200 bg-white shadow-sm">
       {/* Logo */}
-      <div className="flex h-[60px] items-center gap-2.5 border-b border-gray-200 px-5">
-        <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-lg shadow-sm">
-          <span className="text-sm font-bold text-white">A</span>
+      <div className="flex h-[60px] items-center gap-2 border-b border-gray-200 px-5">
+        <div className="bg-primary flex h-7 w-7 items-center justify-center border-2 border-gray-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+          <span className="text-sm font-black text-white">A</span>
         </div>
-        <span className="text-[15px] font-bold tracking-tight text-gray-900">
+        <span className="text-xl font-black tracking-tight text-gray-900">
           AssetFlow
         </span>
       </div>
 
       {/* Nav */}
-      <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto p-3">
+      <nav className="flex flex-1 flex-col gap-0 overflow-y-auto py-3">
         {navigation.map((item) => {
           const isActive =
             item.href === "/dashboard"
@@ -73,23 +73,26 @@ export function Sidebar() {
               key={item.name}
               href={item.href}
               className={cn(
-                "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150",
+                "group flex items-center gap-3 px-6 py-3.5 text-sm font-semibold transition-all duration-150 relative",
                 isActive
                   ? "bg-primary/10 text-primary"
-                  : "text-gray-500 hover:bg-gray-100 hover:text-gray-900",
+                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
               )}
             >
+              {isActive && (
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary" />
+              )}
               <Icon
                 className={cn(
-                  "h-4.5 w-4.5 flex-shrink-0 transition-colors",
+                  "h-5 w-5 flex-shrink-0 transition-colors",
                   isActive
                     ? "text-primary"
-                    : "text-gray-400 group-hover:text-gray-600",
+                    : "text-gray-500 group-hover:text-gray-700",
                 )}
               />
               <span className="flex-1 leading-none">{item.name}</span>
               {isActive && (
-                <ChevronRight className="text-primary h-3.5 w-3.5 opacity-60" />
+                <ChevronRight className="text-primary h-4 w-4 opacity-70" />
               )}
             </Link>
           );
@@ -97,23 +100,23 @@ export function Sidebar() {
       </nav>
 
       {/* User footer */}
-      <div className="border-t border-gray-200 p-3">
-        <div className="flex items-center gap-3 rounded-lg px-2 py-2">
-          <div className="bg-primary/15 text-primary flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold">
+      <div className="border-t border-gray-200 bg-gray-50/50 p-3">
+        <div className="flex items-center gap-2 bg-white border-2 border-gray-900 p-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+          <div className="bg-primary text-white flex h-8 w-8 items-center justify-center text-xs font-bold border border-gray-900">
             A
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-xs font-semibold text-gray-900">
+            <p className="truncate text-xs font-bold text-gray-900">
               Admin User
             </p>
-            <p className="truncate text-[10px] text-gray-400">
+            <p className="truncate text-[10px] font-medium text-gray-500">
               admin@assetflow.io
             </p>
           </div>
           <button
             onClick={handleSignOut}
             title="Sign out"
-            className="hover:text-destructive flex h-7 w-7 items-center justify-center rounded-md text-gray-400 transition-colors hover:bg-red-50"
+            className="hover:bg-red-50 hover:text-red-600 flex h-7 w-7 items-center justify-center border-2 border-gray-900 bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-gray-700 transition-all active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
           >
             <LogOut className="h-3.5 w-3.5" />
           </button>

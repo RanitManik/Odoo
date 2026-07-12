@@ -2,6 +2,7 @@ import { Response } from "express";
 import { AuthRequest } from "../middleware/auth.middleware";
 import { prisma } from "../lib/prisma";
 import { z } from "zod";
+import { createNotification } from "../services/notification.service";
 
 const createRequestSchema = z.object({
   assetId: z.string().uuid("Invalid asset ID"),
@@ -130,6 +131,14 @@ export const approveRequest = async (req: AuthRequest, res: Response) => {
     },
   });
 
+  // Notify requestor that maintenance was approved
+  await createNotification(
+    request.userId,
+    "Maintenance Approved",
+    `Your maintenance request for asset ID "${request.assetId}" has been approved.`,
+    "MAINTENANCE_APPROVED"
+  );
+
   return res.json(updatedRequest);
 };
 
@@ -166,6 +175,14 @@ export const rejectRequest = async (req: AuthRequest, res: Response) => {
       userId: currentUserId,
     },
   });
+
+  // Notify requestor that maintenance was rejected
+  await createNotification(
+    request.userId,
+    "Maintenance Rejected",
+    `Your maintenance request for asset ID "${request.assetId}" was rejected.`,
+    "MAINTENANCE_REJECTED"
+  );
 
   return res.json(updatedRequest);
 };

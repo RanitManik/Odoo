@@ -96,7 +96,7 @@ export default function DashboardPage() {
   if (isLoading) {
     return (
       <div className="flex h-[80vh] items-center justify-center">
-        <div className="border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent"></div>
+        <div className="border-primary h-8 w-8 animate-spin rounded-none border-4 border-t-transparent"></div>
       </div>
     );
   }
@@ -105,7 +105,7 @@ export default function DashboardPage() {
   if (!departments || departments.length === 0) {
     return (
       <div className="flex min-h-[80vh] flex-col items-center justify-center text-center">
-        <div className="bg-primary/10 mb-6 flex h-24 w-24 items-center justify-center rounded-full">
+        <div className="bg-primary/10 mb-6 flex h-24 w-24 items-center justify-center rounded-none">
           <Building2 className="text-primary h-12 w-12" />
         </div>
         <h2 className="text-foreground mb-2 text-3xl font-bold tracking-tight">
@@ -160,7 +160,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
-        <div className="border-border bg-background rounded-xl border p-6 shadow-sm transition-all hover:shadow-md">
+        <div className="border-2 border-gray-900 bg-white rounded-none p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-md">
           <div className="text-muted-foreground flex items-center space-x-2 text-sm font-medium">
             <Box className="h-4 w-4" />
             <span>Available Assets</span>
@@ -170,7 +170,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="border-border bg-background rounded-xl border p-6 shadow-sm transition-all hover:shadow-md">
+        <div className="border-2 border-gray-900 bg-white rounded-none p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-md">
           <div className="text-muted-foreground flex items-center space-x-2 text-sm font-medium">
             <CheckCircle2 className="h-4 w-4" />
             <span>Allocated Assets</span>
@@ -180,7 +180,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="border-border bg-background rounded-xl border p-6 shadow-sm transition-all hover:shadow-md">
+        <div className="border-2 border-gray-900 bg-white rounded-none p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-md">
           <div className="text-muted-foreground flex items-center space-x-2 text-sm font-medium">
             <Wrench className="h-4 w-4" />
             <span>Maintenance</span>
@@ -190,7 +190,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="border-border bg-background rounded-xl border p-6 shadow-sm transition-all hover:shadow-md">
+        <div className="border-2 border-gray-900 bg-white rounded-none p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-md">
           <div className="text-muted-foreground flex items-center space-x-2 text-sm font-medium">
             <CalendarClock className="h-4 w-4" />
             <span>Active Bookings</span>
@@ -200,7 +200,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="border-border bg-background rounded-xl border p-6 shadow-sm transition-all hover:shadow-md">
+        <div className="border-2 border-gray-900 bg-white rounded-none p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-md">
           <div className="text-muted-foreground flex items-center space-x-2 text-sm font-medium">
             <ClipboardList className="h-4 w-4" />
             <span>Active Audits</span>
@@ -210,7 +210,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="border-border bg-background rounded-xl border p-6 shadow-sm transition-all hover:shadow-md">
+        <div className="border-2 border-gray-900 bg-white rounded-none p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-md">
           <div className="text-muted-foreground flex items-center space-x-2 text-sm font-medium">
             <ArrowRightLeft className="h-4 w-4" />
             <span>Pending Transfers</span>
@@ -223,7 +223,7 @@ export default function DashboardPage() {
 
       {/* Overdue Alert */}
       {overdueAssets.length > 0 && (
-        <div className="border-destructive/50 bg-destructive/10 text-destructive flex items-center gap-4 rounded-xl border p-5">
+        <div className="border-2 border-red-900 bg-red-100 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-destructive flex items-center gap-4 rounded-none border p-5">
           <AlertCircle className="h-6 w-6 shrink-0" />
           <div>
             <h4 className="text-sm font-bold">
@@ -264,12 +264,12 @@ export default function DashboardPage() {
       </div>
 
       {/* Recent Activity */}
-      <div className="border-border bg-background rounded-xl border shadow-sm">
-        <div className="border-border border-b p-6">
+      <div className="border-2 border-gray-900 bg-white rounded-none border-2 border-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <div className="border-b-2 border-gray-900 p-6">
           <h3 className="text-lg font-semibold">Recent Activity</h3>
         </div>
         <div className="p-0">
-          <ul className="divide-border divide-y">
+          <ul className="divide-gray-900 divide-y-2">
             {assets.slice(0, 3).map((asset) => {
               const holderName =
                 asset.user?.name || asset.department?.name || "";
@@ -279,7 +279,7 @@ export default function DashboardPage() {
                   className="hover:bg-muted/50 flex items-start gap-4 p-6"
                 >
                   <div
-                    className={`mt-1 h-2 w-2 rounded-full ${asset.status === "ALLOCATED" ? "bg-primary" : "bg-success"}`}
+                    className={`mt-1 h-2 w-2 rounded-none ${asset.status === "ALLOCATED" ? "bg-primary" : "bg-success"}`}
                   ></div>
                   <div>
                     <p className="text-foreground text-sm font-medium">

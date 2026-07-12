@@ -37,6 +37,8 @@ model User {
   bookings           Booking[]
   maintenanceRequests MaintenanceRequest[]
   audits             Audit[]
+  notifications      Notification[]
+  history            AssetHistory[]
 
   @@map("users")
 }
@@ -134,6 +136,7 @@ model AssetHistory {
   action    String
   details   String
   userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   createdAt DateTime @default(now())
 
   @@map("asset_history")
@@ -240,4 +243,17 @@ model Audit {
   updatedAt         DateTime    @updatedAt
 
   @@map("audits")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("notifications")
 }

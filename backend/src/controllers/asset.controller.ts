@@ -2,6 +2,7 @@ import { Response } from "express";
 import { AuthRequest } from "../middleware/auth.middleware";
 import { prisma } from "../lib/prisma";
 import { z } from "zod";
+import { createNotification } from "../services/notification.service";
 
 const createAssetSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -310,6 +311,20 @@ export const allocateAsset = async (req: AuthRequest, res: Response) => {
     },
   });
 
+  // Trigger notification for the employee if allocated directly to a user
+  if (data.userId) {
+    await createNotification(
+      data.userId,
+      "Asset Assigned",
+      `The physical asset "${updatedAsset.name}" has been assigned to you. Expected return: ${
+        data.expectedReturnDate
+          ? new Date(data.expectedReturnDate).toLocaleDateString()
+          : "Not scheduled"
+      }.`,
+      "ASSET_ASSIGNED"
+    );
+  }
+
   return res.json(updatedAsset);
 };
 
@@ -358,6 +373,16 @@ export const returnAsset = async (req: AuthRequest, res: Response) => {
       userId: currentUserId,
     },
   });
+
+  // Trigger notification if there was a user holding it
+  if (asset.userId) {
+    await createNotification(
+      asset.userId,
+      "Asset Return Processed",
+      `The return check-in for "${asset.name}" has been completed (Condition: ${data.condition}).`,
+      "ASSET_RETURNED"
+    );
+  }
 
   return res.json(updatedAsset);
 };

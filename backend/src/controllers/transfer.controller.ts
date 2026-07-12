@@ -1,6 +1,7 @@
 import { Response } from "express";
 import { AuthRequest } from "../middleware/auth.middleware";
 import { prisma } from "../lib/prisma";
+import { createNotification } from "../services/notification.service";
 
 /**
  * GET /api/transfers
@@ -64,11 +65,9 @@ export const approveTransfer = async (req: AuthRequest, res: Response) => {
   }
 
   if (transfer.status !== "PENDING") {
-    return res
-      .status(400)
-      .json({
-        error: `Transfer request is already ${transfer.status.toLowerCase()}`,
-      });
+    return res.status(400).json({
+      error: `Transfer request is already ${transfer.status.toLowerCase()}`,
+    });
   }
 
   // Update Transfer Status
@@ -99,6 +98,24 @@ export const approveTransfer = async (req: AuthRequest, res: Response) => {
     },
   });
 
+  // Notify requestor that transfer was approved
+  await createNotification(
+    transfer.requestorId,
+    "Transfer Approved",
+    `Your transfer request for asset "${transfer.asset.name}" has been approved.`,
+    "TRANSFER_APPROVED"
+  );
+
+  // Notify target user if set
+  if (transfer.targetUserId) {
+    await createNotification(
+      transfer.targetUserId,
+      "Asset Assigned (Transfer)",
+      `Asset "${transfer.asset.name}" has been assigned to you via transfer.`,
+      "ASSET_ASSIGNED"
+    );
+  }
+
   return res.json({ transfer: updatedTransfer, asset: updatedAsset });
 };
 
@@ -118,11 +135,9 @@ export const rejectTransfer = async (req: AuthRequest, res: Response) => {
   }
 
   if (transfer.status !== "PENDING") {
-    return res
-      .status(400)
-      .json({
-        error: `Transfer request is already ${transfer.status.toLowerCase()}`,
-      });
+    return res.status(400).json({
+      error: `Transfer request is already ${transfer.status.toLowerCase()}`,
+    });
   }
 
   const updatedTransfer = await prisma.transferRequest.update({
@@ -139,6 +154,14 @@ export const rejectTransfer = async (req: AuthRequest, res: Response) => {
       userId: currentUserId,
     },
   });
+
+  // Notify requestor that transfer was rejected
+  await createNotification(
+    transfer.requestorId,
+    "Transfer Rejected",
+    `Your transfer request for asset ID "${transfer.assetId}" was rejected.`,
+    "TRANSFER_REJECTED"
+  );
 
   return res.json(updatedTransfer);
 };
