@@ -252,60 +252,86 @@ export default function MaintenancePage() {
     {
       key: "actions",
       label: "Actions",
-      action: true,
-      options: [
-        {
-          option: "Approve Request",
-          handleAction: (row: MaintenanceRequest) => {
-            if (row.status !== "PENDING") return;
-            setConfirmState({
-              isOpen: true,
-              title: "Approve Maintenance",
-              description: `Are you sure you want to approve repair work for "${row.asset.name}"? This flips the asset status to Under Maintenance.`,
-              action: () => approveMutation.mutate(row.id),
-            });
-          },
-        },
-        {
-          option: "Reject Request",
-          handleAction: (row: MaintenanceRequest) => {
-            if (row.status !== "PENDING") return;
-            setConfirmState({
-              isOpen: true,
-              title: "Reject Request",
-              description: `Are you sure you want to reject this request for "${row.asset.name}"?`,
-              action: () => rejectMutation.mutate(row.id),
-            });
-          },
-        },
-        {
-          option: "Assign Technician",
-          handleAction: (row: MaintenanceRequest) => {
-            if (row.status !== "APPROVED" && row.status !== "TECHNICIAN_ASSIGNED") return;
-            setSelectedRequest(row);
-            setAssignOpen(true);
-          },
-        },
-        {
-          option: "Start Work",
-          handleAction: (row: MaintenanceRequest) => {
-            if (row.status !== "TECHNICIAN_ASSIGNED") return;
-            startMutation.mutate(row.id);
-          },
-        },
-        {
-          option: "Resolve Request",
-          handleAction: (row: MaintenanceRequest) => {
-            if (row.status !== "IN_PROGRESS") return;
-            setConfirmState({
-              isOpen: true,
-              title: "Mark Resolved",
-              description: `Has the issue with "${row.asset.name}" been fully resolved? Fips asset back to Available.`,
-              action: () => resolveMutation.mutate(row.id),
-            });
-          },
-        },
-      ],
+      formatValue: (_: any, row: MaintenanceRequest) => {
+        if (row.status === "PENDING") {
+          return (
+            <div className="flex gap-2">
+              <Button
+                size="xs"
+                variant="primary"
+                onClick={() =>
+                  setConfirmState({
+                    isOpen: true,
+                    title: "Approve Maintenance",
+                    description: `Are you sure you want to approve repair work for "${row.asset.name}"? This flips the asset status to Under Maintenance.`,
+                    action: () => approveMutation.mutate(row.id),
+                  })
+                }
+              >
+                Approve
+              </Button>
+              <Button
+                size="xs"
+                variant="destructive"
+                onClick={() =>
+                  setConfirmState({
+                    isOpen: true,
+                    title: "Reject Request",
+                    description: `Are you sure you want to reject this request for "${row.asset.name}"?`,
+                    action: () => rejectMutation.mutate(row.id),
+                  })
+                }
+              >
+                Reject
+              </Button>
+            </div>
+          );
+        }
+        if (row.status === "APPROVED") {
+          return (
+            <Button
+              size="xs"
+              variant="secondary"
+              onClick={() => {
+                setSelectedRequest(row);
+                setAssignOpen(true);
+              }}
+            >
+              Assign Tech
+            </Button>
+          );
+        }
+        if (row.status === "TECHNICIAN_ASSIGNED") {
+          return (
+            <Button
+              size="xs"
+              variant="primary"
+              onClick={() => startMutation.mutate(row.id)}
+            >
+              Start Work
+            </Button>
+          );
+        }
+        if (row.status === "IN_PROGRESS") {
+          return (
+            <Button
+              size="xs"
+              variant="secondary"
+              onClick={() =>
+                setConfirmState({
+                  isOpen: true,
+                  title: "Mark Resolved",
+                  description: `Has the issue with "${row.asset.name}" been fully resolved? This returns the asset status to Available.`,
+                  action: () => resolveMutation.mutate(row.id),
+                })
+              }
+            >
+              Resolve
+            </Button>
+          );
+        }
+        return <span className="text-gray-400 text-xs">—</span>;
+      },
     },
   ];
 
