@@ -15,6 +15,7 @@ import bookingRouter from "./routes/booking.route";
 import maintenanceRouter from "./routes/maintenance.route";
 import auditRouter from "./routes/audit.route";
 import reportRouter from "./routes/report.route";
+import notificationRouter from "./routes/notification.route";
 import { errorHandler } from "./middleware/error.middleware";
 
 const host = process.env.HOST ?? "localhost";
@@ -25,6 +26,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:3000",
   "https://odoo-frontend-bice.vercel.app",
+  "https://assetflow.5dev.in"
 ];
 
 app.use(
@@ -55,6 +57,7 @@ app.use("/api/bookings", bookingRouter);
 app.use("/api/maintenance", maintenanceRouter);
 app.use("/api/audits", auditRouter);
 app.use("/api/reports", reportRouter);
+app.use("/api/notifications", notificationRouter);
 
 app.get("/", (req, res) => {
   res.send({ message: "Welcome to AssetFlow API" });
