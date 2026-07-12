@@ -23,6 +23,10 @@ const createEmployeeSchema = z.object({
 const updateEmployeeSchema = z.object({
   name: z.string().min(1).optional(),
   email: z.string().email().optional(),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .optional(),
   role: z
     .enum(["ADMIN", "ASSET_MANAGER", "DEPARTMENT_HEAD", "EMPLOYEE"])
     .optional(),
@@ -138,8 +142,7 @@ export const createEmployee = async (req: Request, res: Response) => {
 
 /**
  * PATCH /api/employees/:id
- * Updates an employee's profile (name, email, role, department, status).
- * Does NOT allow password changes through this endpoint.
+ * Updates an employee's profile (name, email, role, department, status, optionally password).
  */
 export const updateEmployee = async (req: Request, res: Response) => {
   const id = req.params.id as string;
@@ -154,9 +157,21 @@ export const updateEmployee = async (req: Request, res: Response) => {
     }
   }
 
+  const updateData: Record<string, any> = {
+    name: data.name,
+    email: data.email,
+    role: data.role,
+    departmentId: data.departmentId,
+    status: data.status,
+  };
+
+  if (data.password) {
+    updateData.password = await bcrypt.hash(data.password, 12);
+  }
+
   const employee = await prisma.user.update({
     where: { id },
-    data,
+    data: updateData,
     select: {
       id: true,
       name: true,
