@@ -100,5 +100,8 @@
     "tailwind-merge": "^3.6.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^4.4.3"
+  },
+  "prisma": {
+    "seed": "ts-node backend/prisma/seed.ts"
   }
 }
