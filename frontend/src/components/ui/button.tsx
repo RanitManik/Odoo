@@ -84,7 +84,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
         tabIndex={tabIndex}
         className={cn(
-          "cursor-pointer leading-none transition focus:outline-none",
+          "flex cursor-pointer items-center justify-center leading-none transition focus:outline-none",
           variantStyles[variant],
           sizeStyles[size],
           className,

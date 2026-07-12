@@ -1,34 +1,40 @@
-import { Role } from '@prisma/client';
-import * as bcrypt from 'bcryptjs';
-import { prisma } from '../src/lib/prisma';
+import { Role } from "@prisma/client";
+import * as bcrypt from "bcryptjs";
+import { prisma } from "../src/lib/prisma";
 
 async function main() {
-  const adminEmail = 'admin@example.com';
+  const adminEmail = "admin@example.com";
   const existingAdmin = await prisma.user.findUnique({
     where: { email: adminEmail },
   });
 
   if (existingAdmin) {
-    console.log('Admin user already exists. Skipping seeding.');
+    console.log("Admin user already exists. Skipping seeding.");
     return;
   }
 
-  const hashedPassword = await bcrypt.hash('admin123', 10);
+  const hashedPassword = await bcrypt.hash("admin123", 10);
+
+  const itDept = await prisma.department.upsert({
+    where: { name: "IT" },
+    update: {},
+    create: { name: "IT" },
+  });
 
   const admin = await prisma.user.create({
     data: {
-      name: 'System Admin',
+      name: "System Admin",
       email: adminEmail,
       password: hashedPassword,
       role: Role.ADMIN,
-      department: 'IT',
-      status: 'ACTIVE',
+      departmentId: itDept.id,
+      status: "ACTIVE",
     },
   });
 
-  console.log('Admin user created successfully!');
-  console.log('Email:', admin.email);
-  console.log('Password: admin123');
+  console.log("Admin user created successfully!");
+  console.log("Email:", admin.email);
+  console.log("Password: admin123");
 }
 
 main()

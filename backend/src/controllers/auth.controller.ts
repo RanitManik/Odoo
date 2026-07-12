@@ -33,7 +33,7 @@ export const signup = async (req: Request, res: Response) => {
       name,
       email,
       password: hashedPassword,
-      department,
+      departmentId: department,
       role: "EMPLOYEE",
     },
   });
@@ -86,7 +86,7 @@ export const login = async (req: Request, res: Response) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      department: user.department,
+      departmentId: user.departmentId,
     },
   });
 };
