@@ -35,7 +35,7 @@ app.use(
       if (!origin) return callback(null, true);
       if (
         allowedOrigins.indexOf(origin) !== -1 ||
-        origin.endsWith(".vercel.app")
+        origin.endsWith(".5dev.in")
       ) {
         return callback(null, true);
       }
