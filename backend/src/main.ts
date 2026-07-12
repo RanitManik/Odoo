@@ -22,6 +22,7 @@ const host = process.env.HOST ?? "localhost";
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
 
 const app = express();
+app.set("trust proxy", 1); // Trust first proxy to allow secure cookies in production
 
 const allowedOrigins = [
   "http://localhost:3000",
