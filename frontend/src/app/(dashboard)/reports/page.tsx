@@ -59,7 +59,11 @@ export default function ReportsPage() {
     },
   });
 
-  const { data: assets = [], isLoading: assetsLoading, refetch } = useQuery<Asset[]>({
+  const {
+    data: assets = [],
+    isLoading: assetsLoading,
+    refetch,
+  } = useQuery<Asset[]>({
     queryKey: ["reports-assets", filters],
     queryFn: async () => {
       const res = await api.get("/assets", {
@@ -111,11 +115,15 @@ export default function ReportsPage() {
     const params = new URLSearchParams();
     if (filters.status) params.append("status", filters.status);
     if (filters.categoryId) params.append("categoryId", filters.categoryId);
-    if (filters.departmentId) params.append("departmentId", filters.departmentId);
+    if (filters.departmentId)
+      params.append("departmentId", filters.departmentId);
     if (filters.startDate) params.append("startDate", filters.startDate);
     if (filters.endDate) params.append("endDate", filters.endDate);
 
-    window.open(`${api.defaults.baseURL}/reports/export-csv?${params.toString()}`, "_blank");
+    window.open(
+      `${api.defaults.baseURL}/reports/export-csv?${params.toString()}`,
+      "_blank",
+    );
   };
 
   const columns = [
@@ -149,19 +157,22 @@ export default function ReportsPage() {
       key: "status",
       label: "Status",
       formatValue: (_: any, row: Asset) => {
-        const styles = {
-          AVAILABLE: "bg-green-100 text-green-800",
-          ALLOCATED: "bg-blue-100 text-blue-800",
-          RESERVED: "bg-purple-100 text-purple-800",
-          UNDER_MAINTENANCE: "bg-orange-100 text-orange-800",
-          UNDER_INVESTIGATION: "bg-yellow-100 text-yellow-800",
-          LOST: "bg-red-100 text-red-800",
-          RETIRED: "bg-gray-100 text-gray-800",
-          DISPOSED: "bg-gray-200 text-gray-800",
-        }[row.status] || "bg-gray-100 text-gray-800";
+        const styles =
+          {
+            AVAILABLE: "bg-green-100 text-green-800",
+            ALLOCATED: "bg-blue-100 text-blue-800",
+            RESERVED: "bg-purple-100 text-purple-800",
+            UNDER_MAINTENANCE: "bg-orange-100 text-orange-800",
+            UNDER_INVESTIGATION: "bg-yellow-100 text-yellow-800",
+            LOST: "bg-red-100 text-red-800",
+            RETIRED: "bg-gray-100 text-gray-800",
+            DISPOSED: "bg-gray-200 text-gray-800",
+          }[row.status] || "bg-gray-100 text-gray-800";
 
         return (
-          <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${styles}`}>
+          <span
+            className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${styles}`}
+          >
             {row.status.replace("_", " ")}
           </span>
         );
@@ -172,7 +183,11 @@ export default function ReportsPage() {
       label: "Purchase Cost",
       formatValue: (_: any, row: Asset) => (
         <span className="text-sm font-medium text-gray-700">
-          {row.purchaseCost ? `$${row.purchaseCost.toLocaleString()}` : <span className="text-gray-400">—</span>}
+          {row.purchaseCost ? (
+            `$${row.purchaseCost.toLocaleString()}`
+          ) : (
+            <span className="text-gray-400">—</span>
+          )}
         </span>
       ),
     },
@@ -195,7 +210,8 @@ export default function ReportsPage() {
             Asset Reports & Analytics
           </h2>
           <p className="text-muted-foreground mt-2">
-            Filter, inspect, and export spreadsheet reports of your hardware and resource inventories.
+            Filter, inspect, and export spreadsheet reports of your hardware and
+            resource inventories.
           </p>
         </div>
         <div className="flex gap-3">
@@ -215,26 +231,43 @@ export default function ReportsPage() {
         <Select
           label="Status"
           options={statusOptions}
-          selectedOption={statusOptions.find((o) => o.value === filters.status) ?? statusOptions[0]}
-          onChange={(val: any) => setFilters({ ...filters, status: val?.value || "" })}
+          selectedOption={
+            statusOptions.find((o) => o.value === filters.status) ??
+            statusOptions[0]
+          }
+          onChange={(val: any) =>
+            setFilters({ ...filters, status: val?.value || "" })
+          }
         />
         <Select
           label="Category"
           options={categoryOptions}
-          selectedOption={categoryOptions.find((o) => o.value === filters.categoryId) ?? categoryOptions[0]}
-          onChange={(val: any) => setFilters({ ...filters, categoryId: val?.value || "" })}
+          selectedOption={
+            categoryOptions.find((o) => o.value === filters.categoryId) ??
+            categoryOptions[0]
+          }
+          onChange={(val: any) =>
+            setFilters({ ...filters, categoryId: val?.value || "" })
+          }
         />
         <Select
           label="Department"
           options={departmentOptions}
-          selectedOption={departmentOptions.find((o) => o.value === filters.departmentId) ?? departmentOptions[0]}
-          onChange={(val: any) => setFilters({ ...filters, departmentId: val?.value || "" })}
+          selectedOption={
+            departmentOptions.find((o) => o.value === filters.departmentId) ??
+            departmentOptions[0]
+          }
+          onChange={(val: any) =>
+            setFilters({ ...filters, departmentId: val?.value || "" })
+          }
         />
         <Input
           label="Start Added Date"
           type="date"
           value={filters.startDate}
-          onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
+          onChange={(e) =>
+            setFilters({ ...filters, startDate: e.target.value })
+          }
         />
         <Input
           label="End Added Date"
@@ -250,11 +283,13 @@ export default function ReportsPage() {
           <div className="border-primary h-6 w-6 animate-spin rounded-full border-2 border-t-transparent" />
         </div>
       ) : assets.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-center bg-white rounded-xl border border-gray-200">
+        <div className="flex flex-col items-center justify-center rounded-xl border border-gray-200 bg-white py-16 text-center">
           <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
             <FileSpreadsheet className="h-7 w-7 text-gray-400" />
           </div>
-          <p className="mb-1 text-sm font-medium text-gray-900">No assets match the active filters</p>
+          <p className="mb-1 text-sm font-medium text-gray-900">
+            No assets match the active filters
+          </p>
           <p className="text-sm text-gray-500">
             Adjust the filter settings above to update the preview results.
           </p>

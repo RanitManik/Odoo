@@ -93,7 +93,6 @@ export default function DeleteConfirmationModal({
           </span>
         </div>
 
-
         <ModalDescription>{description}</ModalDescription>
       </ModalBody>
 
