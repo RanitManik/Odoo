@@ -13,6 +13,7 @@ import {
   ArrowRightLeft,
   CalendarClock,
   AlertCircle,
+  Wrench,
 } from "lucide-react";
 import Button from "@/components/ui/button";
 
@@ -64,7 +65,20 @@ export default function DashboardPage() {
     },
   });
 
-  const isLoading = deptsLoading || assetsLoading || transfersLoading || bookingsLoading;
+  const { data: maintenanceRequests = [], isLoading: maintenanceLoading } = useQuery<any[]>({
+    queryKey: ["maintenance-requests"],
+    queryFn: async () => {
+      const res = await api.get("/maintenance");
+      return res.data;
+    },
+  });
+
+  const isLoading =
+    deptsLoading ||
+    assetsLoading ||
+    transfersLoading ||
+    bookingsLoading ||
+    maintenanceLoading;
 
   if (isLoading) {
     return (
@@ -104,6 +118,7 @@ export default function DashboardPage() {
   const allocatedCount = assets.filter((a) => a.status === "ALLOCATED").length;
   const pendingTransfersCount = transfers.filter((t) => t.status === "PENDING").length;
   const activeBookingsCount = bookings.filter((b) => b.status === "UPCOMING" || b.status === "ONGOING").length;
+  const activeMaintenanceCount = maintenanceRequests.filter((r) => r.status !== "RESOLVED" && r.status !== "REJECTED").length;
 
   const overdueAssets = assets.filter((a) => {
     if (a.status !== "ALLOCATED" || !a.expectedReturnDate) return false;
@@ -122,7 +137,7 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
         <div className="border-border bg-background rounded-xl border p-6 shadow-sm transition-all hover:shadow-md">
           <div className="text-muted-foreground flex items-center space-x-2 text-sm font-medium">
             <Box className="h-4 w-4" />
@@ -137,6 +152,14 @@ export default function DashboardPage() {
             <span>Allocated Assets</span>
           </div>
           <div className="text-foreground mt-4 text-4xl font-bold">{allocatedCount}</div>
+        </div>
+
+        <div className="border-border bg-background rounded-xl border p-6 shadow-sm transition-all hover:shadow-md">
+          <div className="text-muted-foreground flex items-center space-x-2 text-sm font-medium">
+            <Wrench className="h-4 w-4" />
+            <span>Maintenance</span>
+          </div>
+          <div className="text-foreground mt-4 text-4xl font-bold">{activeMaintenanceCount}</div>
         </div>
 
         <div className="border-border bg-background rounded-xl border p-6 shadow-sm transition-all hover:shadow-md">

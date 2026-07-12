@@ -35,6 +35,7 @@ model User {
   transferRequests   TransferRequest[] @relation("RequestorTransfers")
   targetTransfers    TransferRequest[] @relation("TargetUserTransfers")
   bookings           Booking[]
+  maintenanceRequests MaintenanceRequest[]
 
   @@map("users")
 }
@@ -118,6 +119,7 @@ model Asset {
   transferRequests TransferRequest[]
   expectedReturnDate DateTime?
   bookings        Booking[]
+  maintenanceRequests MaintenanceRequest[]
 
   @@map("assets")
 }
@@ -177,4 +179,37 @@ model Booking {
   updatedAt DateTime      @updatedAt
 
   @@map("bookings")
+}
+
+enum MaintenancePriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum MaintenanceStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  TECHNICIAN_ASSIGNED
+  IN_PROGRESS
+  RESOLVED
+}
+
+model MaintenanceRequest {
+  id          String              @id @default(uuid())
+  assetId     String
+  asset       Asset               @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  description String
+  priority    MaintenancePriority @default(MEDIUM)
+  status      MaintenanceStatus   @default(PENDING)
+  technician  String?
+  photo       String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  @@map("maintenance_requests")
 }
