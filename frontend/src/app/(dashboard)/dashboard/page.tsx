@@ -76,7 +76,6 @@ export default function DashboardPage() {
       },
     });
 
-
   const isLoading =
     deptsLoading ||
     assetsLoading ||
@@ -132,7 +131,11 @@ export default function DashboardPage() {
   tomorrow.setDate(tomorrow.getDate() + 1);
 
   const activeMaintenanceCount = maintenanceRequests.filter(
-    (r) => r.status !== "RESOLVED" && r.status !== "REJECTED" && new Date(r.createdAt) >= today && new Date(r.createdAt) < tomorrow,
+    (r) =>
+      r.status !== "RESOLVED" &&
+      r.status !== "REJECTED" &&
+      new Date(r.createdAt) >= today &&
+      new Date(r.createdAt) < tomorrow,
   ).length;
 
   const overdueAssets = assets.filter((a) => {
@@ -161,7 +164,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
-        <div className="border-2 border-gray-900 bg-white rounded-none p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-md">
+        <div className="rounded-none border-2 border-gray-900 bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-md">
           <div className="text-muted-foreground flex items-center space-x-2 text-sm font-medium">
             <Box className="h-4 w-4" />
             <span>Available Assets</span>
@@ -171,7 +174,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="border-2 border-gray-900 bg-white rounded-none p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-md">
+        <div className="rounded-none border-2 border-gray-900 bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-md">
           <div className="text-muted-foreground flex items-center space-x-2 text-sm font-medium">
             <CheckCircle2 className="h-4 w-4" />
             <span>Allocated Assets</span>
@@ -181,7 +184,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="border-2 border-gray-900 bg-white rounded-none p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-md">
+        <div className="rounded-none border-2 border-gray-900 bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-md">
           <div className="text-muted-foreground flex items-center space-x-2 text-sm font-medium">
             <Wrench className="h-4 w-4" />
             <span>Maintenance Today</span>
@@ -191,7 +194,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="border-2 border-gray-900 bg-white rounded-none p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-md">
+        <div className="rounded-none border-2 border-gray-900 bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-md">
           <div className="text-muted-foreground flex items-center space-x-2 text-sm font-medium">
             <CalendarClock className="h-4 w-4" />
             <span>Active Bookings</span>
@@ -201,7 +204,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="border-2 border-gray-900 bg-white rounded-none p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-md">
+        <div className="rounded-none border-2 border-gray-900 bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-md">
           <div className="text-muted-foreground flex items-center space-x-2 text-sm font-medium">
             <Clock className="h-4 w-4" />
             <span>Upcoming Returns</span>
@@ -211,7 +214,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="border-2 border-gray-900 bg-white rounded-none p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-md">
+        <div className="rounded-none border-2 border-gray-900 bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:shadow-md">
           <div className="text-muted-foreground flex items-center space-x-2 text-sm font-medium">
             <ArrowRightLeft className="h-4 w-4" />
             <span>Pending Transfers</span>
@@ -224,7 +227,7 @@ export default function DashboardPage() {
 
       {/* Overdue Alert */}
       {overdueAssets.length > 0 && (
-        <div className="border-2 border-red-900 bg-red-100 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-destructive flex items-center gap-4 rounded-none border p-5">
+        <div className="text-destructive flex items-center gap-4 rounded-none border border-2 border-red-900 bg-red-100 p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <AlertCircle className="h-6 w-6 shrink-0" />
           <div>
             <h4 className="text-sm font-bold">
@@ -265,12 +268,12 @@ export default function DashboardPage() {
       </div>
 
       {/* Recent Activity */}
-      <div className="border-2 border-gray-900 bg-white rounded-none border-2 border-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <div className="rounded-none border-2 border-gray-900 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <div className="border-b-2 border-gray-900 p-6">
           <h3 className="text-lg font-semibold">Recent Activity</h3>
         </div>
         <div className="p-0">
-          <ul className="divide-gray-900 divide-y-2">
+          <ul className="divide-y-2 divide-gray-900">
             {assets.slice(0, 3).map((asset) => {
               const holderName =
                 asset.user?.name || asset.department?.name || "";

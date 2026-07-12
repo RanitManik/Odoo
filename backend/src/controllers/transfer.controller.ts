@@ -103,7 +103,7 @@ export const approveTransfer = async (req: AuthRequest, res: Response) => {
     transfer.requestorId,
     "Transfer Approved",
     `Your transfer request for asset "${transfer.asset.name}" has been approved.`,
-    "TRANSFER_APPROVED"
+    "TRANSFER_APPROVED",
   );
 
   // Notify target user if set
@@ -112,7 +112,7 @@ export const approveTransfer = async (req: AuthRequest, res: Response) => {
       transfer.targetUserId,
       "Asset Assigned (Transfer)",
       `Asset "${transfer.asset.name}" has been assigned to you via transfer.`,
-      "ASSET_ASSIGNED"
+      "ASSET_ASSIGNED",
     );
   }
 
@@ -160,7 +160,7 @@ export const rejectTransfer = async (req: AuthRequest, res: Response) => {
     transfer.requestorId,
     "Transfer Rejected",
     `Your transfer request for asset ID "${transfer.assetId}" was rejected.`,
-    "TRANSFER_REJECTED"
+    "TRANSFER_REJECTED",
   );
 
   return res.json(updatedTransfer);

@@ -136,7 +136,7 @@ export const approveRequest = async (req: AuthRequest, res: Response) => {
     request.userId,
     "Maintenance Approved",
     `Your maintenance request for asset ID "${request.assetId}" has been approved.`,
-    "MAINTENANCE_APPROVED"
+    "MAINTENANCE_APPROVED",
   );
 
   return res.json(updatedRequest);
@@ -181,7 +181,7 @@ export const rejectRequest = async (req: AuthRequest, res: Response) => {
     request.userId,
     "Maintenance Rejected",
     `Your maintenance request for asset ID "${request.assetId}" was rejected.`,
-    "MAINTENANCE_REJECTED"
+    "MAINTENANCE_REJECTED",
   );
 
   return res.json(updatedRequest);

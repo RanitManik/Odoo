@@ -73,14 +73,14 @@ export function Sidebar() {
               key={item.name}
               href={item.href}
               className={cn(
-                "group flex items-center gap-3 px-6 py-3.5 text-sm font-semibold transition-all duration-150 relative",
+                "group relative flex items-center gap-3 px-6 py-3.5 text-sm font-semibold transition-all duration-150",
                 isActive
                   ? "bg-primary/10 text-primary"
                   : "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
               )}
             >
               {isActive && (
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary" />
+                <div className="bg-primary absolute top-0 bottom-0 left-0 w-1" />
               )}
               <Icon
                 className={cn(
@@ -101,8 +101,8 @@ export function Sidebar() {
 
       {/* User footer */}
       <div className="border-t border-gray-200 bg-gray-50/50 p-3">
-        <div className="flex items-center gap-2 bg-white border-2 border-gray-900 p-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-          <div className="bg-primary text-white flex h-8 w-8 items-center justify-center text-xs font-bold border border-gray-900">
+        <div className="flex items-center gap-2 border-2 border-gray-900 bg-white p-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+          <div className="bg-primary flex h-8 w-8 items-center justify-center border border-gray-900 text-xs font-bold text-white">
             A
           </div>
           <div className="min-w-0 flex-1">
@@ -116,7 +116,7 @@ export function Sidebar() {
           <button
             onClick={handleSignOut}
             title="Sign out"
-            className="hover:bg-red-50 hover:text-red-600 flex h-7 w-7 items-center justify-center border-2 border-gray-900 bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-gray-700 transition-all active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+            className="flex h-7 w-7 items-center justify-center border-2 border-gray-900 bg-white text-gray-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-red-50 hover:text-red-600 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
           >
             <LogOut className="h-3.5 w-3.5" />
           </button>

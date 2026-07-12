@@ -48,7 +48,10 @@ export const markNotificationRead = async (req: AuthRequest, res: Response) => {
 /**
  * POST /api/notifications/read-all
  */
-export const markAllNotificationsRead = async (req: AuthRequest, res: Response) => {
+export const markAllNotificationsRead = async (
+  req: AuthRequest,
+  res: Response,
+) => {
   const userId = req.user?.id;
   if (!userId) {
     return res.status(401).json({ error: "Unauthorized" });
@@ -81,7 +84,7 @@ export const getActivityLogs = async (req: AuthRequest, res: Response) => {
 
   // Manually fetch and attach user details to avoid cached relation errors on running servers
   const userIds = Array.from(
-    new Set(logs.map((log) => log.userId).filter(Boolean))
+    new Set(logs.map((log) => log.userId).filter(Boolean)),
   ) as string[];
 
   const users = await prisma.user.findMany({

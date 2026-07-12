@@ -76,8 +76,9 @@ export const login = async (req: Request, res: Response) => {
   const isProd = process.env.NODE_ENV === "production";
   res.cookie("token", token, {
     httpOnly: true,
-    secure: isProd,
+    secure: isProd ? true : false,
     sameSite: isProd ? "none" : "lax",
+    domain: isProd ? ".5dev.in" : undefined,
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
@@ -97,8 +98,9 @@ export const logout = (req: Request, res: Response) => {
   const isProd = process.env.NODE_ENV === "production";
   res.clearCookie("token", {
     httpOnly: true,
-    secure: isProd,
+    secure: isProd ? true : false,
     sameSite: isProd ? "none" : "lax",
+    domain: isProd ? ".5dev.in" : undefined,
   });
   return res.json({ message: "Logged out successfully" });
 };

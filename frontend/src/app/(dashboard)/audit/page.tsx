@@ -174,7 +174,10 @@ export default function AuditPage() {
   });
 
   const closeAuditMutation = useMutation({
-    mutationFn: async (payload: { id: string; data: typeof closeAuditForm }) => {
+    mutationFn: async (payload: {
+      id: string;
+      data: typeof closeAuditForm;
+    }) => {
       const res = await api.post(`/audits/${payload.id}/close`, payload.data);
       return res.data;
     },
@@ -675,10 +678,16 @@ export default function AuditPage() {
                   { label: "Lost / Missing", value: "LOST" },
                   { label: "Under Maintenance", value: "UNDER_MAINTENANCE" },
                   { label: "Retired", value: "RETIRED" },
-                ].find((o) => o.value === closeAuditForm.finalAssetStatus) ?? { label: "Available", value: "AVAILABLE" }
+                ].find((o) => o.value === closeAuditForm.finalAssetStatus) ?? {
+                  label: "Available",
+                  value: "AVAILABLE",
+                }
               }
               onChange={(val: any) =>
-                setCloseAuditForm({ ...closeAuditForm, finalAssetStatus: val.value })
+                setCloseAuditForm({
+                  ...closeAuditForm,
+                  finalAssetStatus: val.value,
+                })
               }
               required
             />
@@ -687,20 +696,18 @@ export default function AuditPage() {
               placeholder="Explain how discrepancy was resolved and why this status was chosen..."
               value={closeAuditForm.resolutionNotes}
               onChange={(e) =>
-                setCloseAuditForm({ ...closeAuditForm, resolutionNotes: e.target.value })
+                setCloseAuditForm({
+                  ...closeAuditForm,
+                  resolutionNotes: e.target.value,
+                })
               }
               required
               rows={4}
             />
           </ModalBody>
           <ModalFooter>
-            <Button
-              type="submit"
-              disabled={closeAuditMutation.isPending}
-            >
-              {closeAuditMutation.isPending
-                ? "Closing..."
-                : "Close Audit"}
+            <Button type="submit" disabled={closeAuditMutation.isPending}>
+              {closeAuditMutation.isPending ? "Closing..." : "Close Audit"}
             </Button>
           </ModalFooter>
         </form>

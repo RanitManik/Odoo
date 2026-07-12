@@ -49,13 +49,17 @@ interface ActivityLog {
 
 export default function NotificationsPage() {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState<"notifications" | "activities">("notifications");
+  const [activeTab, setActiveTab] = useState<"notifications" | "activities">(
+    "notifications",
+  );
   const [searchQuery, setSearchQuery] = useState("");
 
   // Queries
-  const { data: notifications = [], isLoading: notificationsLoading, refetch: refetchNotifications } = useQuery<
-    Notification[]
-  >({
+  const {
+    data: notifications = [],
+    isLoading: notificationsLoading,
+    refetch: refetchNotifications,
+  } = useQuery<Notification[]>({
     queryKey: ["notifications"],
     queryFn: async () => {
       const res = await api.get("/notifications");
@@ -63,9 +67,11 @@ export default function NotificationsPage() {
     },
   });
 
-  const { data: activities = [], isLoading: activitiesLoading, refetch: refetchActivities } = useQuery<
-    ActivityLog[]
-  >({
+  const {
+    data: activities = [],
+    isLoading: activitiesLoading,
+    refetch: refetchActivities,
+  } = useQuery<ActivityLog[]>({
     queryKey: ["activities"],
     queryFn: async () => {
       const res = await api.get("/notifications/activities");
@@ -166,35 +172,80 @@ export default function NotificationsPage() {
   const getActivityConfig = (action: string) => {
     switch (action) {
       case "REGISTERED":
-        return { color: "text-green-700 bg-green-50 border-green-200", label: "Registered" };
+        return {
+          color: "text-green-700 bg-green-50 border-green-200",
+          label: "Registered",
+        };
       case "ALLOCATED":
-        return { color: "text-blue-700 bg-blue-50 border-blue-200", label: "Allocated" };
+        return {
+          color: "text-blue-700 bg-blue-50 border-blue-200",
+          label: "Allocated",
+        };
       case "RETURNED":
-        return { color: "text-indigo-700 bg-indigo-50 border-indigo-200", label: "Returned" };
+        return {
+          color: "text-indigo-700 bg-indigo-50 border-indigo-200",
+          label: "Returned",
+        };
       case "BOOKED":
-        return { color: "text-purple-700 bg-purple-50 border-purple-200", label: "Booked" };
+        return {
+          color: "text-purple-700 bg-purple-50 border-purple-200",
+          label: "Booked",
+        };
       case "BOOKING_CANCELLED":
-        return { color: "text-red-700 bg-red-50 border-red-200", label: "Booking Cancelled" };
+        return {
+          color: "text-red-700 bg-red-50 border-red-200",
+          label: "Booking Cancelled",
+        };
       case "MAINTENANCE_APPROVED":
-        return { color: "text-orange-700 bg-orange-50 border-orange-200", label: "Maintenance Approved" };
+        return {
+          color: "text-orange-700 bg-orange-50 border-orange-200",
+          label: "Maintenance Approved",
+        };
       case "MAINTENANCE_REJECTED":
-        return { color: "text-red-700 bg-red-50 border-red-200", label: "Maintenance Rejected" };
+        return {
+          color: "text-red-700 bg-red-50 border-red-200",
+          label: "Maintenance Rejected",
+        };
       case "MAINTENANCE_RESOLVED":
-        return { color: "text-green-700 bg-green-50 border-green-200", label: "Maintenance Resolved" };
+        return {
+          color: "text-green-700 bg-green-50 border-green-200",
+          label: "Maintenance Resolved",
+        };
       case "TRANSFERRED":
-        return { color: "text-teal-700 bg-teal-50 border-teal-200", label: "Transferred" };
+        return {
+          color: "text-teal-700 bg-teal-50 border-teal-200",
+          label: "Transferred",
+        };
       case "TRANSFER_REJECTED":
-        return { color: "text-red-700 bg-red-50 border-red-200", label: "Transfer Rejected" };
+        return {
+          color: "text-red-700 bg-red-50 border-red-200",
+          label: "Transfer Rejected",
+        };
       case "AUDIT_SCHEDULED":
-        return { color: "text-sky-700 bg-sky-50 border-sky-200", label: "Audit Scheduled" };
+        return {
+          color: "text-sky-700 bg-sky-50 border-sky-200",
+          label: "Audit Scheduled",
+        };
       case "AUDIT_STARTED":
-        return { color: "text-amber-700 bg-amber-50 border-amber-200", label: "Audit Started" };
+        return {
+          color: "text-amber-700 bg-amber-50 border-amber-200",
+          label: "Audit Started",
+        };
       case "AUDIT_DISCREPANCY_FOUND":
-        return { color: "text-red-700 bg-red-50 border-red-200", label: "Audit Discrepancy" };
+        return {
+          color: "text-red-700 bg-red-50 border-red-200",
+          label: "Audit Discrepancy",
+        };
       case "AUDIT_DISCREPANCY_RESOLVED":
-        return { color: "text-green-700 bg-green-50 border-green-200", label: "Audit Resolved" };
+        return {
+          color: "text-green-700 bg-green-50 border-green-200",
+          label: "Audit Resolved",
+        };
       default:
-        return { color: "text-gray-700 bg-gray-50 border-gray-200", label: action };
+        return {
+          color: "text-gray-700 bg-gray-50 border-gray-200",
+          label: action,
+        };
     }
   };
 
@@ -207,7 +258,8 @@ export default function NotificationsPage() {
             Notifications & Activities
           </h2>
           <p className="text-muted-foreground mt-2">
-            Track real-time inventory lifecycle changes, system logs, and personalized asset approvals.
+            Track real-time inventory lifecycle changes, system logs, and
+            personalized asset approvals.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -248,7 +300,7 @@ export default function NotificationsPage() {
           <Bell className="h-4 w-4" />
           My Notifications
           {unreadCount > 0 && (
-            <span className="ml-1 bg-red-100 text-red-600 rounded-none px-2 py-0.5 text-xs font-semibold">
+            <span className="ml-1 rounded-none bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-600">
               {unreadCount}
             </span>
           )}
@@ -273,13 +325,16 @@ export default function NotificationsPage() {
             <div className="border-primary h-6 w-6 animate-spin rounded-full border-2 border-t-transparent" />
           </div>
         ) : notifications.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-center bg-white rounded-none border-2 border-gray-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+          <div className="flex flex-col items-center justify-center rounded-none border-2 border-gray-900 bg-white py-16 text-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
             <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-none bg-gray-50 text-gray-400">
               <Inbox className="h-7 w-7" />
             </div>
-            <p className="mb-1 text-sm font-medium text-gray-900">Your inbox is clear</p>
+            <p className="mb-1 text-sm font-medium text-gray-900">
+              Your inbox is clear
+            </p>
             <p className="text-sm text-gray-500">
-              Personalized asset updates, bookings, and alerts will appear here when active.
+              Personalized asset updates, bookings, and alerts will appear here
+              when active.
             </p>
           </div>
         ) : (
@@ -287,31 +342,41 @@ export default function NotificationsPage() {
             {notifications.map((notif) => {
               const config = getNotificationConfig(notif.type);
               return (
-                  <div
-                    key={notif.id}
-                    className={`flex items-start justify-between p-4 bg-white rounded-none relative transition-colors ${
-                      !notif.read ? "border-2 border-gray-900 border-l-[6px] border-l-primary" : "border border-gray-200"
-                    }`}
-                  >
+                <div
+                  key={notif.id}
+                  className={`relative flex items-start justify-between rounded-none bg-white p-4 transition-colors ${
+                    !notif.read
+                      ? "border-l-primary border-2 border-l-[6px] border-gray-900"
+                      : "border border-gray-200"
+                  }`}
+                >
                   <div className="flex gap-3">
-                    <div className={`p-2 rounded-none border h-fit shrink-0 ${config.bgColor}`}>
+                    <div
+                      className={`h-fit shrink-0 rounded-none border p-2 ${config.bgColor}`}
+                    >
                       {config.icon}
                     </div>
                     <div className="space-y-1">
                       <div className="flex flex-wrap items-baseline gap-2">
-                        <h4 className={`text-sm font-bold ${!notif.read ? "text-gray-900" : "text-gray-700"}`}>
+                        <h4
+                          className={`text-sm font-bold ${!notif.read ? "text-gray-900" : "text-gray-700"}`}
+                        >
                           {notif.title}
                         </h4>
-                        <span className={`inline-block rounded px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wide leading-none ${config.badgeColor}`}>
+                        <span
+                          className={`inline-block rounded px-1.5 py-0.5 text-xs leading-none font-semibold tracking-wide uppercase ${config.badgeColor}`}
+                        >
                           {notif.type.replace("_", " ")}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600 leading-relaxed max-w-3xl">
+                      <p className="max-w-3xl text-sm leading-relaxed text-gray-600">
                         {notif.message}
                       </p>
-                      <div className="flex items-center gap-1.5 text-xs text-gray-500 font-medium pt-0.5">
+                      <div className="flex items-center gap-1.5 pt-0.5 text-xs font-medium text-gray-500">
                         <Clock className="h-3 w-3" />
-                        <span>{new Date(notif.createdAt).toLocaleString()}</span>
+                        <span>
+                          {new Date(notif.createdAt).toLocaleString()}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -321,7 +386,7 @@ export default function NotificationsPage() {
                       variant="outline"
                       onClick={() => markAsReadMutation.mutate(notif.id)}
                       disabled={markAsReadMutation.isPending}
-                      className="shrink-0 ml-4 font-semibold border border-gray-200 hover:translate-x-[1px] hover:translate-y-[1px] hover:bg-gray-100"
+                      className="ml-4 shrink-0 border border-gray-200 font-semibold hover:translate-x-[1px] hover:translate-y-[1px] hover:bg-gray-100"
                     >
                       <Check className="mr-1 h-3.5 w-3.5" />
                       Mark read
@@ -336,7 +401,7 @@ export default function NotificationsPage() {
         /* Timeline Activities tab */
         <div className="space-y-4">
           {/* Timeline search bar */}
-          <div className="relative max-w-md bg-white rounded-none shadow-sm border border-gray-200">
+          <div className="relative max-w-md rounded-none border border-gray-200 bg-white shadow-sm">
             <span className="absolute inset-y-0 left-0 flex items-center pl-3">
               <Search className="h-4 w-4 text-gray-400" />
             </span>
@@ -345,7 +410,7 @@ export default function NotificationsPage() {
               placeholder="Search actions, asset tag, or users..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-none py-2 pl-9 pr-4 text-sm text-gray-900 focus:outline-none"
+              className="w-full rounded-none py-2 pr-4 pl-9 text-sm text-gray-900 focus:outline-none"
             />
           </div>
 
@@ -354,13 +419,16 @@ export default function NotificationsPage() {
               <div className="border-primary h-6 w-6 animate-spin rounded-full border-2 border-t-transparent" />
             </div>
           ) : filteredActivities.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-center bg-white rounded-none border-2 border-gray-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+            <div className="flex flex-col items-center justify-center rounded-none border-2 border-gray-900 bg-white py-16 text-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
               <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-none bg-gray-50 text-gray-400">
                 <ClipboardList className="h-7 w-7" />
               </div>
-              <p className="mb-1 text-sm font-medium text-gray-900">No activity logs found</p>
+              <p className="mb-1 text-sm font-medium text-gray-900">
+                No activity logs found
+              </p>
               <p className="text-sm text-gray-500">
-                All physical asset allocations, returns, and maintenance records will display here.
+                All physical asset allocations, returns, and maintenance records
+                will display here.
               </p>
             </div>
           ) : (
@@ -371,31 +439,35 @@ export default function NotificationsPage() {
                 return (
                   <div
                     key={act.id}
-                    className="flex flex-col md:flex-row md:items-start justify-between gap-4 bg-white border border-gray-200 rounded-none p-4"
+                    className="flex flex-col justify-between gap-4 rounded-none border border-gray-200 bg-white p-4 md:flex-row md:items-start"
                   >
-                    <div className="flex flex-col md:w-1/4 gap-2 shrink-0">
+                    <div className="flex shrink-0 flex-col gap-2 md:w-1/4">
                       <span
-                        className={`rounded-none px-2 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-wider w-fit border border-gray-200 ${config.color}`}
+                        className={`w-fit rounded-none border border-gray-200 px-2 py-1 text-[10px] font-bold tracking-wider uppercase sm:text-xs ${config.color}`}
                       >
                         {config.label.replace(/_/g, " ")}
                       </span>
-                      <div className="flex flex-col mt-0.5">
-                        <span className="font-black text-gray-900 text-sm leading-tight">{act.asset.name}</span>
-                        <span className="font-mono text-xs font-bold text-gray-500 mt-0.5">{act.asset.assetTag}</span>
+                      <div className="mt-0.5 flex flex-col">
+                        <span className="text-sm leading-tight font-black text-gray-900">
+                          {act.asset.name}
+                        </span>
+                        <span className="mt-0.5 font-mono text-xs font-bold text-gray-500">
+                          {act.asset.assetTag}
+                        </span>
                       </div>
                     </div>
 
-                    <div className="flex-1 text-sm text-gray-800 font-semibold leading-relaxed md:px-4 md:border-l-2 md:border-gray-200">
+                    <div className="flex-1 text-sm leading-relaxed font-semibold text-gray-800 md:border-l-2 md:border-gray-200 md:px-4">
                       {act.details}
                     </div>
 
-                    <div className="flex flex-col md:items-end gap-1.5 shrink-0 md:w-1/4">
-                      <div className="flex items-center justify-end gap-1.5 text-xs text-gray-600 font-bold">
+                    <div className="flex shrink-0 flex-col gap-1.5 md:w-1/4 md:items-end">
+                      <div className="flex items-center justify-end gap-1.5 text-xs font-bold text-gray-600">
                         <Clock className="h-3.5 w-3.5" />
                         <span>{new Date(act.createdAt).toLocaleString()}</span>
                       </div>
                       {act.user && (
-                        <div className="text-xs text-gray-900 font-black bg-white border border-gray-200 px-2 py-1 truncate max-w-full">
+                        <div className="max-w-full truncate border border-gray-200 bg-white px-2 py-1 text-xs font-black text-gray-900">
                           {act.user.name}
                         </div>
                       )}

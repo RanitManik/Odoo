@@ -19,7 +19,13 @@ const completeAuditSchema = z.object({
 
 const closeAuditSchema = z.object({
   resolutionNotes: z.string().min(1, "Resolution notes are required"),
-  finalAssetStatus: z.enum(["AVAILABLE", "LOST", "UNDER_MAINTENANCE", "RETIRED", "ALLOCATED"]),
+  finalAssetStatus: z.enum([
+    "AVAILABLE",
+    "LOST",
+    "UNDER_MAINTENANCE",
+    "RETIRED",
+    "ALLOCATED",
+  ]),
 });
 
 /**
@@ -191,7 +197,7 @@ export const completeAudit = async (req: AuthRequest, res: Response) => {
     await notifyAdminsAndManagers(
       "Audit Discrepancy Found",
       `A discrepancy was flagged during physical audit of asset ID "${audit.assetId}". Condition: ${data.verifiedCondition}. Details: ${data.notes || "None"}`,
-      "AUDIT_DISCREPANCY"
+      "AUDIT_DISCREPANCY",
     );
   } else {
     // Log in asset history

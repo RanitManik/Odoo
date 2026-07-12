@@ -97,7 +97,7 @@ export const ToastProvider: FC<ToastProviderProps> = ({ children }) => {
   return (
     <ToastContext.Provider value={{ addToast }}>
       {children}
-      <div className="fixed top-4 right-4 z-[9999]">
+      <div className="fixed right-4 bottom-4 z-[9999]">
         {toasts.length > 0 && (
           <Toast
             key={toasts[0].id}

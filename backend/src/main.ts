@@ -26,7 +26,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:3000",
   "https://odoo-frontend-bice.vercel.app",
-  "https://assetflow.5dev.in"
+  "https://assetflow.5dev.in",
 ];
 
 app.use(

@@ -131,7 +131,7 @@ export const createBooking = async (req: AuthRequest, res: Response) => {
     currentUserId,
     "Booking Confirmed",
     `Your reservation for "${booking.asset.name}" from ${booking.startTime.toLocaleString()} to ${booking.endTime.toLocaleString()} has been confirmed.`,
-    "BOOKING_CONFIRMED"
+    "BOOKING_CONFIRMED",
   );
 
   return res.status(201).json(booking);
@@ -176,7 +176,7 @@ export const cancelBooking = async (req: AuthRequest, res: Response) => {
     booking.userId,
     "Booking Cancelled",
     `Your reservation for asset ID "${booking.assetId}" from ${booking.startTime.toLocaleString()} to ${booking.endTime.toLocaleString()} has been cancelled.`,
-    "BOOKING_CANCELLED"
+    "BOOKING_CANCELLED",
   );
 
   return res.json(updatedBooking);

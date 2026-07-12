@@ -321,7 +321,7 @@ export const allocateAsset = async (req: AuthRequest, res: Response) => {
           ? new Date(data.expectedReturnDate).toLocaleDateString()
           : "Not scheduled"
       }.`,
-      "ASSET_ASSIGNED"
+      "ASSET_ASSIGNED",
     );
   }
 
@@ -380,7 +380,7 @@ export const returnAsset = async (req: AuthRequest, res: Response) => {
       asset.userId,
       "Asset Return Processed",
       `The return check-in for "${asset.name}" has been completed (Condition: ${data.condition}).`,
-      "ASSET_RETURNED"
+      "ASSET_RETURNED",
     );
   }
 

@@ -4,7 +4,7 @@ export const createNotification = async (
   userId: string,
   title: string,
   message: string,
-  type: string
+  type: string,
 ) => {
   try {
     return await prisma.notification.create({
@@ -24,7 +24,7 @@ export const createNotification = async (
 export const notifyAdminsAndManagers = async (
   title: string,
   message: string,
-  type: string
+  type: string,
 ) => {
   try {
     const targets = await prisma.user.findMany({
@@ -45,7 +45,7 @@ export const notifyAdminsAndManagers = async (
           message,
           type,
         },
-      })
+      }),
     );
 
     await Promise.all(createPromises);
