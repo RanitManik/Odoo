@@ -129,7 +129,7 @@ const Modal: FC<ModalProps> = ({
       <div
         ref={modalRef}
         className={cn(
-          "relative grid h-full w-full transform grid-rows-[auto,1fr,auto] bg-white shadow-lg md:h-auto",
+          "relative grid h-full w-full transform grid-rows-[auto,1fr,auto] overflow-hidden bg-white shadow-lg md:h-auto",
           isOpen ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0",
           widthClass,
           className,

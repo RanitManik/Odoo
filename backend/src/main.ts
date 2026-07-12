@@ -10,6 +10,8 @@ import departmentRouter from "./routes/department.route";
 import categoryRouter from "./routes/category.route";
 import employeeRouter from "./routes/employee.route";
 import assetRouter from "./routes/asset.route";
+import transferRouter from "./routes/transfer.route";
+import bookingRouter from "./routes/booking.route";
 import { errorHandler } from "./middleware/error.middleware";
 
 const host = process.env.HOST ?? "localhost";
@@ -26,6 +28,8 @@ app.use("/api/departments", departmentRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/employees", employeeRouter);
 app.use("/api/assets", assetRouter);
+app.use("/api/transfers", transferRouter);
+app.use("/api/bookings", bookingRouter);
 
 app.get("/", (req, res) => {
   res.send({ message: "Welcome to AssetFlow API" });

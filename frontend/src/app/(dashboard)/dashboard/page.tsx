@@ -16,14 +16,55 @@ import {
 } from "lucide-react";
 import Button from "@/components/ui/button";
 
+interface Asset {
+  id: string;
+  name: string;
+  assetTag: string;
+  status: string;
+  expectedReturnDate: string | null;
+  user: { name: string } | null;
+  department: { name: string } | null;
+}
+
+interface TransferRequest {
+  id: string;
+  status: string;
+}
+
 export default function DashboardPage() {
-  const { data: departments, isLoading } = useQuery({
+  const { data: departments = [], isLoading: deptsLoading } = useQuery({
     queryKey: ["departments"],
     queryFn: async () => {
       const res = await api.get("/departments");
       return res.data;
     },
   });
+
+  const { data: assets = [], isLoading: assetsLoading } = useQuery<Asset[]>({
+    queryKey: ["assets"],
+    queryFn: async () => {
+      const res = await api.get("/assets");
+      return res.data;
+    },
+  });
+
+  const { data: transfers = [], isLoading: transfersLoading } = useQuery<TransferRequest[]>({
+    queryKey: ["transfers"],
+    queryFn: async () => {
+      const res = await api.get("/transfers");
+      return res.data;
+    },
+  });
+
+  const { data: bookings = [], isLoading: bookingsLoading } = useQuery<any[]>({
+    queryKey: ["bookings"],
+    queryFn: async () => {
+      const res = await api.get("/bookings");
+      return res.data;
+    },
+  });
+
+  const isLoading = deptsLoading || assetsLoading || transfersLoading || bookingsLoading;
 
   if (isLoading) {
     return (
@@ -58,6 +99,17 @@ export default function DashboardPage() {
     );
   }
 
+  // Calculate live statistics
+  const availableCount = assets.filter((a) => a.status === "AVAILABLE").length;
+  const allocatedCount = assets.filter((a) => a.status === "ALLOCATED").length;
+  const pendingTransfersCount = transfers.filter((t) => t.status === "PENDING").length;
+  const activeBookingsCount = bookings.filter((b) => b.status === "UPCOMING" || b.status === "ONGOING").length;
+
+  const overdueAssets = assets.filter((a) => {
+    if (a.status !== "ALLOCATED" || !a.expectedReturnDate) return false;
+    return new Date(a.expectedReturnDate) < new Date();
+  });
+
   // --- Normal Dashboard (Screen 2 Mockup) ---
   return (
     <div className="space-y-8 pb-10">
@@ -76,7 +128,7 @@ export default function DashboardPage() {
             <Box className="h-4 w-4" />
             <span>Available Assets</span>
           </div>
-          <div className="text-foreground mt-4 text-4xl font-bold">128</div>
+          <div className="text-foreground mt-4 text-4xl font-bold">{availableCount}</div>
         </div>
 
         <div className="border-border bg-background rounded-xl border p-6 shadow-sm transition-all hover:shadow-md">
@@ -84,7 +136,7 @@ export default function DashboardPage() {
             <CheckCircle2 className="h-4 w-4" />
             <span>Allocated Assets</span>
           </div>
-          <div className="text-foreground mt-4 text-4xl font-bold">76</div>
+          <div className="text-foreground mt-4 text-4xl font-bold">{allocatedCount}</div>
         </div>
 
         <div className="border-border bg-background rounded-xl border p-6 shadow-sm transition-all hover:shadow-md">
@@ -92,7 +144,7 @@ export default function DashboardPage() {
             <CalendarClock className="h-4 w-4" />
             <span>Active Bookings</span>
           </div>
-          <div className="text-foreground mt-4 text-4xl font-bold">9</div>
+          <div className="text-foreground mt-4 text-4xl font-bold">{activeBookingsCount}</div>
         </div>
 
         <div className="border-border bg-background rounded-xl border p-6 shadow-sm transition-all hover:shadow-md">
@@ -100,37 +152,47 @@ export default function DashboardPage() {
             <ArrowRightLeft className="h-4 w-4" />
             <span>Pending Transfers</span>
           </div>
-          <div className="text-foreground mt-4 text-4xl font-bold">3</div>
+          <div className="text-foreground mt-4 text-4xl font-bold">{pendingTransfersCount}</div>
         </div>
       </div>
 
       {/* Overdue Alert */}
-      <div className="border-destructive/50 bg-destructive/10 text-destructive flex items-center gap-4 rounded-xl border p-5">
-        <AlertCircle className="h-6 w-6" />
-        <div>
-          <h4 className="text-sm font-bold">3 assets overdue for return</h4>
-          <p className="text-sm opacity-90">
-            These assets have been flagged for follow-up immediately.
-          </p>
+      {overdueAssets.length > 0 && (
+        <div className="border-destructive/50 bg-destructive/10 text-destructive flex items-center gap-4 rounded-xl border p-5">
+          <AlertCircle className="h-6 w-6 shrink-0" />
+          <div>
+            <h4 className="text-sm font-bold">{overdueAssets.length} assets overdue for return</h4>
+            <p className="text-sm opacity-90">
+              These assets have passed their expected return date. Please follow up.
+            </p>
+          </div>
+          <Link href="/allocation" className="ml-auto">
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-destructive text-destructive hover:bg-destructive hover:text-white"
+            >
+              View Overdue
+            </Button>
+          </Link>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          className="border-destructive text-destructive hover:bg-destructive ml-auto hover:text-white"
-        >
-          View Overdue
-        </Button>
-      </div>
+      )}
 
       {/* Quick Actions */}
       <div className="flex flex-wrap gap-4">
-        <Button className="font-semibold shadow-sm">+ Register Asset</Button>
-        <Button variant="outline" className="font-semibold shadow-sm">
-          Book Resource
-        </Button>
-        <Button variant="outline" className="font-semibold shadow-sm">
-          Raise Request
-        </Button>
+        <Link href="/assets">
+          <Button className="font-semibold shadow-sm">+ Register Asset</Button>
+        </Link>
+        <Link href="/booking">
+          <Button variant="outline" className="font-semibold shadow-sm">
+            Book Resource
+          </Button>
+        </Link>
+        <Link href="/maintenance">
+          <Button variant="outline" className="font-semibold shadow-sm">
+            Raise Request
+          </Button>
+        </Link>
       </div>
 
       {/* Recent Activity */}
@@ -140,40 +202,24 @@ export default function DashboardPage() {
         </div>
         <div className="p-0">
           <ul className="divide-border divide-y">
-            <li className="hover:bg-muted/50 flex items-start gap-4 p-6">
-              <div className="bg-primary mt-1 h-2 w-2 rounded-full"></div>
-              <div>
-                <p className="text-foreground text-sm font-medium">
-                  Laptop AF-0114 - allocated to Priya Shah (IT Dept)
-                </p>
-                <div className="text-muted-foreground mt-1 flex items-center text-xs">
-                  <Clock className="mr-1 h-3 w-3" />
-                  10 mins ago
-                </div>
-              </div>
-            </li>
-            <li className="hover:bg-muted/50 flex items-start gap-4 p-6">
-              <div className="bg-success mt-1 h-2 w-2 rounded-full"></div>
-              <div>
-                <p className="text-foreground text-sm font-medium">
-                  Room B2 - booking confirmed (2:00 to 3:00 PM)
-                </p>
-                <div className="text-muted-foreground mt-1 flex items-center text-xs">
-                  <Clock className="mr-1 h-3 w-3" />1 hour ago
-                </div>
-              </div>
-            </li>
-            <li className="hover:bg-muted/50 flex items-start gap-4 p-6">
-              <div className="bg-warning mt-1 h-2 w-2 rounded-full"></div>
-              <div>
-                <p className="text-foreground text-sm font-medium">
-                  Projector AF-0062 - maintenance resolved
-                </p>
-                <div className="text-muted-foreground mt-1 flex items-center text-xs">
-                  <Clock className="mr-1 h-3 w-3" />2 hours ago
-                </div>
-              </div>
-            </li>
+            {assets.slice(0, 3).map((asset) => {
+              const holderName = asset.user?.name || asset.department?.name || "";
+              return (
+                <li key={asset.id} className="hover:bg-muted/50 flex items-start gap-4 p-6">
+                  <div className={`mt-1 h-2 w-2 rounded-full ${asset.status === "ALLOCATED" ? "bg-primary" : "bg-success"}`}></div>
+                  <div>
+                    <p className="text-foreground text-sm font-medium">
+                      Asset {asset.name} ({asset.assetTag}) - currently {asset.status.toLowerCase()}
+                      {asset.status === "ALLOCATED" && holderName && ` to ${holderName}`}
+                    </p>
+                    <div className="text-muted-foreground mt-1 flex items-center text-xs">
+                      <Clock className="mr-1 h-3 w-3" />
+                      Just updated
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>

@@ -5,6 +5,9 @@ import {
   createAsset,
   updateAsset,
   deleteAsset,
+  allocateAsset,
+  returnAsset,
+  createTransferRequest,
 } from "../controllers/asset.controller";
 import { authenticate } from "../middleware/auth.middleware";
 
@@ -19,5 +22,9 @@ router.post("/", createAsset);
 router.patch("/:id", updateAsset);
 router.put("/:id", updateAsset);
 router.delete("/:id", deleteAsset);
+
+router.post("/:id/allocate", allocateAsset);
+router.post("/:id/return", returnAsset);
+router.post("/:id/transfer-request", createTransferRequest);
 
 export default router;

@@ -32,6 +32,9 @@ model User {
 
   managedDepartments Department[] @relation("DepartmentHead")
   allocatedAssets    Asset[]      @relation("UserAssets")
+  transferRequests   TransferRequest[] @relation("RequestorTransfers")
+  targetTransfers    TransferRequest[] @relation("TargetUserTransfers")
+  bookings           Booking[]
 
   @@map("users")
 }
@@ -50,6 +53,7 @@ model Department {
 
   users  User[]  @relation("UserDepartment")
   assets Asset[] @relation("DepartmentAssets")
+  targetDeptTransfers TransferRequest[] @relation("TargetDeptTransfers")
 
   @@map("departments")
 }
@@ -111,6 +115,9 @@ model Asset {
   updatedAt       DateTime      @updatedAt
 
   history         AssetHistory[]
+  transferRequests TransferRequest[]
+  expectedReturnDate DateTime?
+  bookings        Booking[]
 
   @@map("assets")
 }
@@ -125,4 +132,49 @@ model AssetHistory {
   createdAt DateTime @default(now())
 
   @@map("asset_history")
+}
+
+enum TransferStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model TransferRequest {
+  id           String         @id @default(uuid())
+  assetId      String
+  asset        Asset          @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  requestorId  String
+  requestor    User           @relation("RequestorTransfers", fields: [requestorId], references: [id])
+  targetUserId String?
+  targetUser   User?          @relation("TargetUserTransfers", fields: [targetUserId], references: [id])
+  targetDeptId String?
+  targetDept   Department?    @relation("TargetDeptTransfers", fields: [targetDeptId], references: [id])
+  status       TransferStatus @default(PENDING)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@map("transfer_requests")
+}
+
+enum BookingStatus {
+  UPCOMING
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+model Booking {
+  id        String        @id @default(uuid())
+  assetId   String
+  asset     Asset         @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startTime DateTime
+  endTime   DateTime
+  status    BookingStatus @default(UPCOMING)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("bookings")
 }

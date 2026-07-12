@@ -152,7 +152,7 @@ export function Table2({
   getRowId = (row) => row.id,
   isArrowBusy = false,
   setIsArrowBusy = () => {},
-  focusable = true,
+  focusable = false,
   rowsPerPage = 15,
   pagination = true,
   totalResults,
@@ -892,7 +892,7 @@ export function Table2({
                         "bg-gray-50 hover:bg-gray-100",
                       getRowTooltip &&
                         hoveredRowIndex === rowIndex &&
-                        "outline-primaryH outline outline-2 -outline-offset-2",
+                        "outline-primaryH outline-2 -outline-offset-2",
                       focusedRowIndex === rowIndex &&
                         "outline-primary focus:outline-primary bg-gray-100 -outline-offset-2 outline-none hover:bg-gray-200 focus:outline-2 focus:-outline-offset-2 focus:outline-none",
                       rowClassName?.(row),

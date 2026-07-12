@@ -224,3 +224,174 @@ export const deleteAsset = async (req: AuthRequest, res: Response) => {
 
   return res.json({ message: "Asset deleted successfully" });
 };
+
+const allocateAssetSchema = z.object({
+  userId: z.string().uuid("Invalid employee ID").optional().nullable(),
+  departmentId: z.string().uuid("Invalid department ID").optional().nullable(),
+  expectedReturnDate: z
+    .string()
+    .transform((v) => (v ? new Date(v) : null))
+    .optional()
+    .nullable(),
+});
+
+export const allocateAsset = async (req: AuthRequest, res: Response) => {
+  const id = req.params.id as string;
+  const data = allocateAssetSchema.parse(req.body);
+
+  const asset = await prisma.asset.findUnique({
+    where: { id },
+    include: {
+      user: { select: { name: true } },
+      department: { select: { name: true } },
+    },
+  });
+
+  if (!asset) {
+    return res.status(404).json({ error: "Asset not found" });
+  }
+
+  // Conflict Rule: Check if already allocated
+  if (asset.status === "ALLOCATED") {
+    const currentlyHeldBy =
+      asset.user?.name || asset.department?.name || "another user/department";
+    return res.status(400).json({
+      error: `Asset is currently held by ${currentlyHeldBy}`,
+      currentlyHeldBy,
+    });
+  }
+
+  const updatedAsset = await prisma.asset.update({
+    where: { id },
+    data: {
+      status: "ALLOCATED",
+      userId: data.userId || null,
+      departmentId: data.departmentId || null,
+      expectedReturnDate: data.expectedReturnDate || null,
+    },
+    include: {
+      category: { select: { id: true, name: true } },
+      department: { select: { id: true, name: true } },
+      user: { select: { id: true, name: true, email: true } },
+    },
+  });
+
+  // Log in history
+  const currentUserId = req.user?.id || null;
+  const targetName =
+    updatedAsset.user?.name || updatedAsset.department?.name || "";
+  await prisma.assetHistory.create({
+    data: {
+      assetId: asset.id,
+      action: "ALLOCATED",
+      details: `Asset allocated to ${targetName}. Expected Return Date: ${
+        data.expectedReturnDate
+          ? new Date(data.expectedReturnDate).toLocaleDateString()
+          : "None"
+      }`,
+      userId: currentUserId,
+    },
+  });
+
+  return res.json(updatedAsset);
+};
+
+const returnAssetSchema = z.object({
+  condition: z.enum(["NEW", "GOOD", "FAIR", "POOR", "DAMAGED"]),
+  notes: z.string().optional().nullable(),
+});
+
+export const returnAsset = async (req: AuthRequest, res: Response) => {
+  const id = req.params.id as string;
+  const data = returnAssetSchema.parse(req.body);
+
+  const asset = await prisma.asset.findUnique({
+    where: { id },
+  });
+
+  if (!asset) {
+    return res.status(404).json({ error: "Asset not found" });
+  }
+
+  const updatedAsset = await prisma.asset.update({
+    where: { id },
+    data: {
+      status: "AVAILABLE",
+      userId: null,
+      departmentId: null,
+      expectedReturnDate: null,
+      condition: data.condition,
+    },
+    include: {
+      category: { select: { id: true, name: true } },
+      department: { select: { id: true, name: true } },
+      user: { select: { id: true, name: true, email: true } },
+    },
+  });
+
+  // Log in history
+  const currentUserId = req.user?.id || null;
+  await prisma.assetHistory.create({
+    data: {
+      assetId: asset.id,
+      action: "RETURNED",
+      details: `Asset returned. Condition checked in as: ${
+        data.condition
+      }. Notes: ${data.notes || "None"}`,
+      userId: currentUserId,
+    },
+  });
+
+  return res.json(updatedAsset);
+};
+
+const transferRequestSchema = z.object({
+  targetUserId: z.string().uuid().optional().nullable(),
+  targetDeptId: z.string().uuid().optional().nullable(),
+});
+
+export const createTransferRequest = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  const id = req.params.id as string;
+  const data = transferRequestSchema.parse(req.body);
+  const currentUserId = req.user?.id;
+
+  if (!currentUserId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const asset = await prisma.asset.findUnique({
+    where: { id },
+  });
+
+  if (!asset) {
+    return res.status(404).json({ error: "Asset not found" });
+  }
+
+  // Create transfer request
+  const request = await prisma.transferRequest.create({
+    data: {
+      assetId: id,
+      requestorId: currentUserId,
+      targetUserId: data.targetUserId || null,
+      targetDeptId: data.targetDeptId || null,
+      status: "PENDING",
+    },
+  });
+
+  // Log in history
+  await prisma.assetHistory.create({
+    data: {
+      assetId: id,
+      action: "TRANSFER_REQUESTED",
+      details: `Transfer requested to ${
+        data.targetUserId ? "User " + data.targetUserId : "Dept " + data.targetDeptId
+      }`,
+      userId: currentUserId,
+    },
+  });
+
+  return res.status(201).json(request);
+};
