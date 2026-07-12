@@ -54,7 +54,7 @@ export function Sidebar() {
         href="/"
         className="flex h-[60px] items-center gap-2 border-b border-gray-200 px-5 transition-colors hover:bg-gray-50"
       >
-        <img src="/logo.svg" alt="AssetFlow Logo" className="h-8 w-auto" />
+        <img src="/brand-logo.svg" alt="AssetFlow Logo" className="h-8 w-auto" />
         <span className="text-xl font-black tracking-tight text-gray-900">
           AssetFlow
         </span>

@@ -14,7 +14,7 @@ export default async function LandingPage() {
       {/* Navigation */}
       <header className="z-10 flex items-center justify-between border-b-4 border-gray-900 bg-white px-8 py-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
         <div className="flex items-center gap-3">
-          <img src="/logo.svg" alt="AssetFlow Logo" className="h-10 w-auto" />
+          <img src="/brand-logo.svg" alt="AssetFlow Logo" className="h-10 w-auto" />
           <span className="text-2xl font-black tracking-tight text-gray-900">
             AssetFlow
           </span>
