@@ -9,6 +9,7 @@ import { authRouter } from "./routes/auth.route";
 import departmentRouter from "./routes/department.route";
 import categoryRouter from "./routes/category.route";
 import employeeRouter from "./routes/employee.route";
+import assetRouter from "./routes/asset.route";
 import { errorHandler } from "./middleware/error.middleware";
 
 const host = process.env.HOST ?? "localhost";
@@ -24,6 +25,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/departments", departmentRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/employees", employeeRouter);
+app.use("/api/assets", assetRouter);
 
 app.get("/", (req, res) => {
   res.send({ message: "Welcome to AssetFlow API" });

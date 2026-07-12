@@ -1002,7 +1002,7 @@ export default function OrganizationSetupPage() {
       {/* Card */}
       <div className="">
         {/* Tabs */}
-        <div className="flex border-b border-gray-200 px-4">
+        <div className="flex border-b border-gray-200">
           <TabBtn
             active={activeTab === "departments"}
             icon={Building2}
@@ -1027,7 +1027,7 @@ export default function OrganizationSetupPage() {
         </div>
 
         {/* Tab content */}
-        <div className="p-5">
+        <div className="py-5">
           {activeTab === "departments" && (
             <DepartmentsTab
               departments={departments}

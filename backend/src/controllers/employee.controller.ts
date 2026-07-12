@@ -157,7 +157,7 @@ export const updateEmployee = async (req: Request, res: Response) => {
     }
   }
 
-  const updateData: Record<string, any> = {
+  const updateData: Record<string, unknown> = {
     name: data.name,
     email: data.email,
     role: data.role,

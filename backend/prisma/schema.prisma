@@ -31,6 +31,7 @@ model User {
   updatedAt    DateTime    @updatedAt
 
   managedDepartments Department[] @relation("DepartmentHead")
+  allocatedAssets    Asset[]      @relation("UserAssets")
 
   @@map("users")
 }
@@ -47,7 +48,8 @@ model Department {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
-  users User[] @relation("UserDepartment")
+  users  User[]  @relation("UserDepartment")
+  assets Asset[] @relation("DepartmentAssets")
 
   @@map("departments")
 }
@@ -60,5 +62,67 @@ model AssetCategory {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  assets Asset[] @relation("CategoryAssets")
+
   @@map("asset_categories")
+}
+
+enum AssetStatus {
+  AVAILABLE
+  ALLOCATED
+  RESERVED
+  UNDER_MAINTENANCE
+  LOST
+  RETIRED
+  DISPOSED
+}
+
+enum Condition {
+  NEW
+  GOOD
+  FAIR
+  POOR
+  DAMAGED
+}
+
+model Asset {
+  id              String        @id @default(uuid())
+  name            String
+  assetTag        String        @unique // e.g., AF-0001
+  serialNumber    String?
+  acquisitionDate DateTime
+  acquisitionCost Float?
+  condition       Condition     @default(GOOD)
+  location        String?
+  image           String?
+  isBookable      Boolean       @default(false)
+  status          AssetStatus   @default(AVAILABLE)
+
+  categoryId      String
+  category        AssetCategory @relation("CategoryAssets", fields: [categoryId], references: [id])
+
+  departmentId    String?
+  department      Department?   @relation("DepartmentAssets", fields: [departmentId], references: [id])
+
+  userId          String?
+  user            User?         @relation("UserAssets", fields: [userId], references: [id])
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  history         AssetHistory[]
+
+  @@map("assets")
+}
+
+model AssetHistory {
+  id        String   @id @default(uuid())
+  assetId   String
+  asset     Asset    @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  action    String
+  details   String
+  userId    String?
+  createdAt DateTime @default(now())
+
+  @@map("asset_history")
 }
