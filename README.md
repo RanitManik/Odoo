@@ -33,17 +33,19 @@ The database seeding script automatically creates a System Admin account for eva
 **Email:** `admin@example.com`  
 **Password:** `admin123`
 
-*(Note: Other roles like Asset Manager, Department Head, and Employee can be created by signing up normally, and then promoted via the Organization Setup tab using the Admin account).*
+_(Note: Other roles like Asset Manager, Department Head, and Employee can be created by signing up normally, and then promoted via the Organization Setup tab using the Admin account)._
 
 ## 🚀 Quick Start (Local Evaluation)
 
 1. **Install dependencies:**
+
    ```bash
    npm install
    ```
 
 2. **Environment Variables:**
    Create a `.env` file in the root of the workspace (or inside the backend directory).
+
    ```env
    # PostgreSQL Connection String
    DATABASE_URL="postgresql://postgres:password@localhost:5432/assetflow"
@@ -52,6 +54,7 @@ The database seeding script automatically creates a System Admin account for eva
 
 3. **Database Setup:**
    Run Prisma commands from the root directory to push the schema and seed the initial admin data.
+
    ```bash
    npx prisma db push --schema=backend/prisma/schema.prisma
    npx ts-node backend/prisma/seed.ts
@@ -59,6 +62,7 @@ The database seeding script automatically creates a System Admin account for eva
 
 4. **Start the Application:**
    Start both the frontend (Port 3000) and backend (Port 4000) simultaneously using Nx.
+
    ```bash
    npm run dev
    ```

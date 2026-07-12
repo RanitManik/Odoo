@@ -38,7 +38,10 @@ export default function LoginPage() {
   return (
     <div className="relative min-h-screen w-full bg-white">
       {/* Logo at top-left corner */}
-      <Link href="/" className="absolute top-6 left-6 z-10 flex items-center gap-3 transition-transform hover:-translate-y-1">
+      <Link
+        href="/"
+        className="absolute top-6 left-6 z-10 flex items-center gap-3 transition-transform hover:-translate-y-1"
+      >
         <img src="/logo.svg" alt="AssetFlow Logo" className="h-10 w-auto" />
         <span className="text-2xl font-black tracking-tight text-gray-900">
           AssetFlow

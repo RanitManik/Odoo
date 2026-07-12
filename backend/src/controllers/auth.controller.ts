@@ -73,7 +73,8 @@ export const login = async (req: Request, res: Response) => {
 
   const token = signToken({ userId: user.id });
 
-  const isLocalhost = req.hostname === "localhost" || req.hostname === "127.0.0.1";
+  const isLocalhost =
+    req.hostname === "localhost" || req.hostname === "127.0.0.1";
   res.cookie("token", token, {
     httpOnly: true,
     secure: !isLocalhost,
@@ -94,7 +95,8 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const logout = (req: Request, res: Response) => {
-  const isLocalhost = req.hostname === "localhost" || req.hostname === "127.0.0.1";
+  const isLocalhost =
+    req.hostname === "localhost" || req.hostname === "127.0.0.1";
   res.clearCookie("token", {
     httpOnly: true,
     secure: !isLocalhost,

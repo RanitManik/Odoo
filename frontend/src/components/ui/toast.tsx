@@ -106,7 +106,7 @@ const Toast = forwardRef<HTMLDivElement, ToastProps>(
     return (
       <div
         ref={ref}
-        className={`fixed right-4 bottom-4 left-4 isolation-auto z-[2147483647] flex w-fit max-w-[500px] min-w-[340px] items-stretch overflow-hidden rounded-lg shadow-md ${
+        className={`fixed bottom-4 right-4 isolation-auto z-[2147483647] flex w-fit max-w-[500px] min-w-[340px] items-stretch overflow-hidden rounded-lg shadow-md ${
           visible
             ? "animate-in fade-in slide-in-from-bottom-5 duration-300"
             : "animate-out fade-out slide-out-to-bottom-5 duration-300"

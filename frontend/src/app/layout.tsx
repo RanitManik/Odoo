@@ -5,7 +5,8 @@ import NextTopLoader from "nextjs-toploader";
 
 export const metadata = {
   title: "AssetFlow | Enterprise Asset Management",
-  description: "Track, allocate, and maintain your physical assets and shared resources through a centralized platform.",
+  description:
+    "Track, allocate, and maintain your physical assets and shared resources through a centralized platform.",
 };
 
 export default function RootLayout({
