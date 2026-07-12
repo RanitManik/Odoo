@@ -607,22 +607,29 @@ export default function AssetsPage() {
     {
       key: "actions",
       label: "Actions",
-      action: true,
-      options: [
-        {
-          option: "Edit",
-          handleAction: (row: any) => {
-            setEditingAsset(row);
-            setModalOpen(true);
-          },
-        },
-        {
-          option: "Delete",
-          handleAction: (row: any) => {
-            setDeleteTargetAsset(row);
-          },
-        },
-      ],
+      formatValue: (_: any, row: any) => (
+        <div className="flex gap-2">
+          <Button
+            size="xs"
+            variant="secondary"
+            onClick={() => {
+              setEditingAsset(row);
+              setModalOpen(true);
+            }}
+          >
+            Edit
+          </Button>
+          <Button
+            size="xs"
+            variant="destructive"
+            onClick={() => {
+              setDeleteTargetAsset(row);
+            }}
+          >
+            Delete
+          </Button>
+        </div>
+      ),
     },
   ];
 

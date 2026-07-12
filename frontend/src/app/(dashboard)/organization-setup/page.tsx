@@ -395,13 +395,15 @@ function DepartmentsTab({
     {
       key: "actions",
       label: "Actions",
-      action: true,
-      options: [
-        {
-          option: "Edit",
-          handleAction: (row: any) => setEditingDept(row),
-        },
-      ],
+      formatValue: (_: any, row: any) => (
+        <Button
+          size="xs"
+          variant="secondary"
+          onClick={() => setEditingDept(row)}
+        >
+          Edit
+        </Button>
+      ),
     },
   ];
 
@@ -517,13 +519,15 @@ function CategoriesTab({
     {
       key: "actions",
       label: "Actions",
-      action: true,
-      options: [
-        {
-          option: "Edit",
-          handleAction: (row: any) => setEditingCat(row),
-        },
-      ],
+      formatValue: (_: any, row: any) => (
+        <Button
+          size="xs"
+          variant="secondary"
+          onClick={() => setEditingCat(row)}
+        >
+          Edit
+        </Button>
+      ),
     },
   ];
 
@@ -854,13 +858,15 @@ function EmployeesTab({
     {
       key: "actions",
       label: "Actions",
-      action: true,
-      options: [
-        {
-          option: "Edit",
-          handleAction: (row: any) => setEditingEmployee(row),
-        },
-      ],
+      formatValue: (_: any, row: any) => (
+        <Button
+          size="xs"
+          variant="secondary"
+          onClick={() => setEditingEmployee(row)}
+        >
+          Edit
+        </Button>
+      ),
     },
   ];
 

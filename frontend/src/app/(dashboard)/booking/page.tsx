@@ -196,23 +196,29 @@ export default function BookingPage() {
     {
       key: "actions",
       label: "Actions",
-      action: true,
-      options: [
-        {
-          option: "Cancel Booking",
-          handleAction: (row: Booking) => {
-            if (row.status === "CANCELLED" || row.status === "COMPLETED") return;
-            setConfirmState({
-              isOpen: true,
-              title: "Cancel Booking",
-              description: `Are you sure you want to cancel the booking for "${row.asset.name}" on ${new Date(
-                row.startTime
-              ).toLocaleDateString()}?`,
-              action: () => cancelBookingMutation.mutate(row.id),
-            });
-          },
-        },
-      ],
+      formatValue: (_: any, row: Booking) => {
+        if (row.status === "CANCELLED" || row.status === "COMPLETED") {
+          return <span className="text-gray-400 text-xs">—</span>;
+        }
+        return (
+          <Button
+            size="xs"
+            variant="destructive"
+            onClick={() =>
+              setConfirmState({
+                isOpen: true,
+                title: "Cancel Booking",
+                description: `Are you sure you want to cancel the booking for "${row.asset.name}" on ${new Date(
+                  row.startTime
+                ).toLocaleDateString()}?`,
+                action: () => cancelBookingMutation.mutate(row.id),
+              })
+            }
+          >
+            Cancel
+          </Button>
+        );
+      },
     },
   ];
 

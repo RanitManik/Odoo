@@ -340,28 +340,35 @@ export default function AllocationPage() {
     {
       key: "actions",
       label: "Actions",
-      action: true,
-      options: [
-        {
-          option: "Return",
-          handleAction: (row: Asset) => {
-            setSelectedAsset(row);
-            setReturnOpen(true);
-          },
-        },
-        {
-          option: "Transfer Request",
-          handleAction: (row: Asset) => {
-            setSelectedAsset(row);
-            setTransferForm({
-              targetType: "employee",
-              userId: "",
-              departmentId: "",
-            });
-            setTransferOpen(true);
-          },
-        },
-      ],
+      formatValue: (_: any, row: Asset) => (
+        <div className="flex gap-2">
+          <Button
+            size="xs"
+            variant="secondary"
+            onClick={() => {
+              setSelectedAsset(row);
+              setReturnOpen(true);
+            }}
+          >
+            Return
+          </Button>
+          <Button
+            size="xs"
+            variant="primary"
+            onClick={() => {
+              setSelectedAsset(row);
+              setTransferForm({
+                targetType: "employee",
+                userId: "",
+                departmentId: "",
+              });
+              setTransferOpen(true);
+            }}
+          >
+            Transfer
+          </Button>
+        </div>
+      ),
     },
   ];
 
@@ -425,31 +432,43 @@ export default function AllocationPage() {
     {
       key: "actions",
       label: "Actions",
-      action: true,
-      options: [
-        {
-          option: "Approve",
-          handleAction: (row: TransferRequest) => {
-            setConfirmState({
-              isOpen: true,
-              title: "Approve Transfer",
-              description: `Are you sure you want to approve the transfer of "${row.asset.name}" (${row.asset.assetTag})?`,
-              action: () => approveTransferMutation.mutate(row.id),
-            });
-          },
-        },
-        {
-          option: "Reject",
-          handleAction: (row: TransferRequest) => {
-            setConfirmState({
-              isOpen: true,
-              title: "Reject Transfer Request",
-              description: `Are you sure you want to reject the transfer request for "${row.asset.name}" (${row.asset.assetTag})?`,
-              action: () => rejectTransferMutation.mutate(row.id),
-            });
-          },
-        },
-      ],
+      formatValue: (_: any, row: TransferRequest) => {
+        if (row.status !== "PENDING") {
+          return <span className="text-gray-400 text-xs">—</span>;
+        }
+        return (
+          <div className="flex gap-2">
+            <Button
+              size="xs"
+              variant="primary"
+              onClick={() =>
+                setConfirmState({
+                  isOpen: true,
+                  title: "Approve Transfer",
+                  description: `Are you sure you want to approve the transfer of "${row.asset.name}" (${row.asset.assetTag})?`,
+                  action: () => approveTransferMutation.mutate(row.id),
+                })
+              }
+            >
+              Approve
+            </Button>
+            <Button
+              size="xs"
+              variant="destructive"
+              onClick={() =>
+                setConfirmState({
+                  isOpen: true,
+                  title: "Reject Transfer Request",
+                  description: `Are you sure you want to reject the transfer request for "${row.asset.name}" (${row.asset.assetTag})?`,
+                  action: () => rejectTransferMutation.mutate(row.id),
+                })
+              }
+            >
+              Reject
+            </Button>
+          </div>
+        );
+      },
     },
   ];
 
