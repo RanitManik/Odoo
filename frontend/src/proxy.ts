@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Define public paths that shouldn't redirect to login if not authenticated
-const PUBLIC_PATHS = ["/login", "/signup", "/"];
+const PUBLIC_PATHS = ["/login", "/signup", "/", "/brand-logo.svg"];
 
 // Define paths that authenticated users should NOT be able to visit (they get redirected to dashboard)
 const AUTH_RESTRICTED_PATHS = ["/login", "/signup"];
@@ -38,8 +38,8 @@ export const config = {
      * - api (API routes)
      * - _next/static (static files)
      * - _next/image (image optimization files)
-     * - favicon.ico, sitemap.xml, robots.txt (metadata files)
+     * - favicon.ico, sitemap.xml, robots.txt, .svg (metadata/static files)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\\\.svg|.*\\\\.png).*)",
   ],
 };

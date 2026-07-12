@@ -78,6 +78,7 @@ export const login = async (req: Request, res: Response) => {
     httpOnly: true,
     secure: !!isSecure,
     sameSite: isSecure ? "none" : "lax",
+    domain: isSecure ? ".5dev.in" : undefined,
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
@@ -99,6 +100,7 @@ export const logout = (req: Request, res: Response) => {
     httpOnly: true,
     secure: !!isSecure,
     sameSite: isSecure ? "none" : "lax",
+    domain: isSecure ? ".5dev.in" : undefined,
   });
   return res.json({ message: "Logged out successfully" });
 };
