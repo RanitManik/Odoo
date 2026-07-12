@@ -13,6 +13,7 @@ import assetRouter from "./routes/asset.route";
 import transferRouter from "./routes/transfer.route";
 import bookingRouter from "./routes/booking.route";
 import maintenanceRouter from "./routes/maintenance.route";
+import auditRouter from "./routes/audit.route";
 import { errorHandler } from "./middleware/error.middleware";
 
 const host = process.env.HOST ?? "localhost";
@@ -48,6 +49,7 @@ app.use("/api/assets", assetRouter);
 app.use("/api/transfers", transferRouter);
 app.use("/api/bookings", bookingRouter);
 app.use("/api/maintenance", maintenanceRouter);
+app.use("/api/audits", auditRouter);
 
 app.get("/", (req, res) => {
   res.send({ message: "Welcome to AssetFlow API" });

@@ -12,8 +12,9 @@ import {
   Clock,
   ArrowRightLeft,
   CalendarClock,
-  AlertCircle,
   Wrench,
+  ClipboardList,
+  AlertCircle,
 } from "lucide-react";
 import Button from "@/components/ui/button";
 
@@ -73,12 +74,21 @@ export default function DashboardPage() {
     },
   });
 
+  const { data: audits = [], isLoading: auditsLoading } = useQuery<any[]>({
+    queryKey: ["audits"],
+    queryFn: async () => {
+      const res = await api.get("/audits");
+      return res.data;
+    },
+  });
+
   const isLoading =
     deptsLoading ||
     assetsLoading ||
     transfersLoading ||
     bookingsLoading ||
-    maintenanceLoading;
+    maintenanceLoading ||
+    auditsLoading;
 
   if (isLoading) {
     return (
@@ -119,6 +129,7 @@ export default function DashboardPage() {
   const pendingTransfersCount = transfers.filter((t) => t.status === "PENDING").length;
   const activeBookingsCount = bookings.filter((b) => b.status === "UPCOMING" || b.status === "ONGOING").length;
   const activeMaintenanceCount = maintenanceRequests.filter((r) => r.status !== "RESOLVED" && r.status !== "REJECTED").length;
+  const activeAuditsCount = audits.filter((a) => a.status === "SCHEDULED" || a.status === "IN_PROGRESS").length;
 
   const overdueAssets = assets.filter((a) => {
     if (a.status !== "ALLOCATED" || !a.expectedReturnDate) return false;
@@ -137,7 +148,7 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
         <div className="border-border bg-background rounded-xl border p-6 shadow-sm transition-all hover:shadow-md">
           <div className="text-muted-foreground flex items-center space-x-2 text-sm font-medium">
             <Box className="h-4 w-4" />
@@ -168,6 +179,14 @@ export default function DashboardPage() {
             <span>Active Bookings</span>
           </div>
           <div className="text-foreground mt-4 text-4xl font-bold">{activeBookingsCount}</div>
+        </div>
+
+        <div className="border-border bg-background rounded-xl border p-6 shadow-sm transition-all hover:shadow-md">
+          <div className="text-muted-foreground flex items-center space-x-2 text-sm font-medium">
+            <ClipboardList className="h-4 w-4" />
+            <span>Active Audits</span>
+          </div>
+          <div className="text-foreground mt-4 text-4xl font-bold">{activeAuditsCount}</div>
         </div>
 
         <div className="border-border bg-background rounded-xl border p-6 shadow-sm transition-all hover:shadow-md">

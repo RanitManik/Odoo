@@ -36,6 +36,7 @@ model User {
   targetTransfers    TransferRequest[] @relation("TargetUserTransfers")
   bookings           Booking[]
   maintenanceRequests MaintenanceRequest[]
+  audits             Audit[]
 
   @@map("users")
 }
@@ -80,6 +81,7 @@ enum AssetStatus {
   LOST
   RETIRED
   DISPOSED
+  UNDER_INVESTIGATION
 }
 
 enum Condition {
@@ -120,6 +122,7 @@ model Asset {
   expectedReturnDate DateTime?
   bookings        Booking[]
   maintenanceRequests MaintenanceRequest[]
+  audits          Audit[]
 
   @@map("assets")
 }
@@ -212,4 +215,29 @@ model MaintenanceRequest {
   updatedAt   DateTime            @updatedAt
 
   @@map("maintenance_requests")
+}
+
+enum AuditStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  DISCREPANCY
+}
+
+model Audit {
+  id                String      @id @default(uuid())
+  assetId           String
+  asset             Asset       @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  auditorId         String
+  auditor           User        @relation(fields: [auditorId], references: [id], onDelete: Cascade)
+  dueDate           DateTime
+  status            AuditStatus @default(SCHEDULED)
+  verifiedCondition String?
+  locationVerified  Boolean?
+  notes             String?
+  resolutionNotes   String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  @@map("audits")
 }
