@@ -38,14 +38,14 @@ export default function LoginPage() {
   return (
     <div className="relative min-h-screen w-full bg-white">
       {/* Logo at top-left corner */}
-      <div className="absolute top-6 left-6 z-10 flex items-center gap-2">
-        <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-lg shadow-md">
-          <span className="text-lg font-bold text-white">A</span>
+      <Link href="/" className="absolute top-6 left-6 z-10 flex items-center gap-3 transition-transform hover:-translate-y-1">
+        <div className="flex h-10 w-10 items-center justify-center rounded-none bg-purple-600 border-2 border-gray-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+          <span className="text-xl font-bold text-white">A</span>
         </div>
-        <span className="text-xl font-bold tracking-tight text-gray-900">
+        <span className="text-2xl font-black tracking-tight text-gray-900">
           AssetFlow
         </span>
-      </div>
+      </Link>
 
       <div className="mx-auto flex min-h-screen w-full items-center">
         <div className="grid w-full grid-cols-1 items-center justify-between md:grid-cols-2">
